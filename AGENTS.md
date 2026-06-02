@@ -65,4 +65,5 @@ or extracted tables that could drive the presentation.
 
 - Edit source files, not generated HTML.
 - Do not commit local absolute paths.
-- Render the ordinary working HTML beside `presentation.qmd`.
+- Render the ordinary working HTML beside `presentation.qmd` as a self-contained
+  single file.

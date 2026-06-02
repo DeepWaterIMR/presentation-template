@@ -1,5 +1,5 @@
-# Render the working RevealJS presentation beside its source or in an optional
-# preview folder.
+# Render the working RevealJS presentation as a self-contained HTML file beside
+# its source or in an optional preview folder.
 #
 # Examples:
 #   Rscript render_presentation.R
@@ -63,6 +63,13 @@ if (is.null(configured_output_dir) || !nzchar(configured_output_dir)) {
   configured_output_dir <- NULL
 }
 output_dir <- arg_value("--output-dir", configured_output_dir)
+metadata <- list(
+  format = list(
+    revealjs = list(
+      "embed-resources" = TRUE
+    )
+  )
+)
 
 message("Rendering presentation")
 message("  config:       ", config_file)
@@ -79,12 +86,20 @@ render_once <- function() {
       config_file = config_file,
       project_root = project_root
     ),
+    metadata = metadata,
     quiet = FALSE
   )
 }
 
 if (is.null(output_dir)) {
   render_once()
+  local_assets <- file.path(
+    dirname(normalizePath(output_file, mustWork = FALSE)),
+    paste0(tools::file_path_sans_ext(basename(output_file)), "_files")
+  )
+  if (dir.exists(local_assets)) {
+    unlink(local_assets, recursive = TRUE)
+  }
 } else {
   final_dir <- normalizePath(output_dir, mustWork = FALSE)
   build_name <- ".preview-build"
@@ -112,16 +127,6 @@ if (is.null(output_dir)) {
     file.path(build_dir, basename(output_file)),
     final_output,
     overwrite = TRUE
-  )
-
-  final_assets <- file.path(final_dir, "presentation_files")
-  if (dir.exists(final_assets)) {
-    unlink(final_assets, recursive = TRUE)
-  }
-  file.copy(
-    file.path(build_dir, "presentation_files"),
-    final_dir,
-    recursive = TRUE
   )
 
   unlink(build_dir, recursive = TRUE)

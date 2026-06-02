@@ -60,7 +60,8 @@ Render with:
 /usr/local/bin/Rscript render_presentation.R
 ```
 
-This writes the ordinary working HTML beside `presentation.qmd`.
+This writes the ordinary working HTML beside `presentation.qmd` as a
+self-contained file that can be shared directly.
 
 Capture screenshots and a contact sheet:
 

@@ -11,7 +11,7 @@ Use a Quarto `revealjs` presentation as the canonical deck:
 - Edit `presentation.qmd` and `slide-plan.md`, not the generated HTML.
 - Read result objects produced by the analysis project. Do not copy numeric
   results into slide text by hand.
-- Render normal HTML with external assets while iterating.
+- Render a self-contained HTML file so the deck can be sent around as one file.
 - Export or print a PDF for review and archiving.
 - Treat PowerPoint as an optional secondary deliverable when colleagues need to
   rearrange slides in Microsoft Office. A Quarto `pptx` render can use a custom
@@ -83,7 +83,8 @@ presentation folder. It does not overwrite an existing project-level
    /usr/local/bin/Rscript render_presentation.R
    ```
 
-   The ordinary working HTML is written beside `presentation.qmd`.
+   The ordinary working HTML is written beside `presentation.qmd` as a
+   self-contained file.
 
 7. Capture QA screenshots and a contact sheet:
 
@@ -127,7 +128,7 @@ after `run_assessment()`.
 ├── presentation.qmd                  # canonical slide source
 ├── presentation.yml                  # project-specific metadata and result path
 ├── slide-plan.md                     # discussion-first slide overview
-├── render_presentation.R             # normal rendering and optional preview output
+├── render_presentation.R             # self-contained rendering and optional preview output
 ├── capture_slides.R                  # screenshots and contact sheet for QA
 ├── install_into_project.R            # overlay starter into an analysis repo
 ├── R/presentation_helpers.R          # result adapters and small plotting helpers

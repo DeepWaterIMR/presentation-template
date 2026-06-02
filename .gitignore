@@ -1,12 +1,18 @@
-# Generated Quarto output
-*.html
-*_files/
+# Generated Quarto output (working deck only; examples are kept, see below)
+/*.html
 .quarto/
+/.quarto/
 
 # Local rendering and QA artifacts
-qa/
-preview/
+/qa/
+/preview/
 *.local.yml
+/examples/
+
+# Images — keep only theme/logo assets and example figures
+*.png
+!assets/**/*.png
+# !examples/**/*.png
 
 # R session artifacts
 .Rhistory
@@ -16,5 +22,8 @@ preview/
 # OS artifacts
 .DS_Store
 
-/.quarto/
 **/*.quarto_ipynb
+
+# Keep example decks viewable on GitHub
+# !examples/**/*.html
+# !examples/**/presentation_files/**
