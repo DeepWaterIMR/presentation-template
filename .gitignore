@@ -1,0 +1,20 @@
+# Generated Quarto output
+*.html
+*_files/
+.quarto/
+
+# Local rendering and QA artifacts
+qa/
+preview/
+*.local.yml
+
+# R session artifacts
+.Rhistory
+.RData
+.Rproj.user/
+
+# OS artifacts
+.DS_Store
+
+/.quarto/
+**/*.quarto_ipynb

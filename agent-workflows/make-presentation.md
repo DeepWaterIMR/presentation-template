@@ -1,0 +1,90 @@
+# Make a presentation
+
+Use this workflow when starting or revising a Quarto presentation based on this
+template.
+
+Treat the presentation folder requested by the user as the deck root. Install
+the starter there if needed, and run render and QA commands from that folder.
+
+## 1. Orient
+
+Read these files from the deck root:
+
+- `README.md`
+- `AGENTS.md`
+- `presentation.yml`
+- `slide-plan.md`
+- any analysis-project guidance relevant to the result object
+
+Familiarize yourself with the surrounding analysis project before proposing a
+deck. Identify its purpose, workflow, existing documentation, compact result
+objects, and candidate plots or tables.
+
+## 2. Plan before slides
+
+Discuss the presentation with the analyst in a conversational style. Ask about
+the audience, duration, meeting context, purpose, one-sentence story, and the
+HTML output filename. Use `presentation.html` if the analyst does not provide
+one. Update `slide-plan.md` as the discussion develops with:
+
+- one claim per slide
+- the proof object for that claim
+- layout class
+- draft slide text
+- speaker notes
+- open questions
+
+Present the proposed overview from `slide-plan.md` to the analyst. Do not edit
+`presentation.qmd` or render the deck until the analyst explicitly approves the
+plan.
+
+## 3. Build
+
+Edit `presentation.qmd` and reuse the layout classes in `assets/theme.scss`.
+Prefer a small number of strong layout patterns:
+
+- title slide
+- two-column explanation
+- chart with one takeaway
+- narrow scenario table
+- three-card conclusion
+
+Read compact analysis outputs and regenerate values during render. Do not copy
+numeric values from a previous deck.
+
+## 4. Render and review
+
+Render with:
+
+```bash
+/usr/local/bin/Rscript render_presentation.R
+```
+
+This writes the ordinary working HTML beside `presentation.qmd`.
+
+Capture screenshots and a contact sheet:
+
+```bash
+/usr/local/bin/Rscript capture_slides.R
+```
+
+Review the images. Check for overflow, small text, visual clutter, weak
+hierarchy, awkward whitespace, inconsistent spacing, and slides without a
+dominant proof object.
+
+If Codex has the deck open in the in-app browser, inspect the rendered slides
+there after each substantial layout change. Otherwise capture screenshots with
+a local browser and inspect those images.
+
+Avoid reading generated HTML as text to judge layout. Read the source `.qmd`
+for semantics and use the in-app browser or rendered images for appearance.
+
+Iterate with the analyst: make the requested change, rerender, visually inspect
+the affected slides, and report what changed.
+
+## 5. Deliver
+
+Keep the `.qmd`, config, helper functions, slide plan, and theme under version
+control. Publish HTML and PDF artifacts according to the project convention.
+Add a PowerPoint deliverable only if the audience requires manual rearrangement
+in Microsoft Office.

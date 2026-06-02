@@ -1,0 +1,247 @@
+/*-- scss:defaults --*/
+$body-bg: #f7f8f5;
+$body-color: #173042;
+$link-color: #056a89;
+$presentation-heading-color: #173042;
+$presentation-heading-font: "Aptos Display", "Helvetica Neue", Arial, sans-serif;
+$font-family-sans-serif: "Aptos", "Helvetica Neue", Arial, sans-serif;
+$presentation-font-size-root: 30px;
+
+/*-- scss:rules --*/
+:root {
+  --imr-ink: #173042;
+  --imr-blue: #056a89;
+  --imr-sky: #449bcf;
+  --imr-green: #6ca67a;
+  --imr-coral: #d44f56;
+  --imr-sand: #f2ead8;
+  --imr-paper: #f7f8f5;
+  --imr-muted: #667985;
+  --imr-line: #d6dedb;
+}
+
+.reveal .slides {
+  text-align: left;
+}
+
+.reveal .slides section.slide {
+  box-sizing: border-box;
+  padding: 44px 58px;
+}
+
+.reveal h1,
+.reveal h2,
+.reveal h3 {
+  letter-spacing: -0.025em;
+  text-transform: none;
+}
+
+.reveal h2 {
+  border-bottom: 3px solid var(--imr-sky);
+  margin-bottom: 0.8em;
+  padding-bottom: 0.2em;
+}
+
+.reveal p,
+.reveal li {
+  line-height: 1.25;
+}
+
+.reveal ul {
+  margin-left: 1em;
+}
+
+.reveal .title-slide {
+  background: linear-gradient(135deg, #eff5f4 0%, #f7f8f5 55%, #e6eef0 100%);
+  position: relative;
+}
+
+.title-slide > h2 {
+  display: none;
+}
+
+.title-kicker {
+  color: var(--imr-blue);
+  font-size: 0.62em;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  margin-bottom: 1.1rem;
+  text-transform: uppercase;
+}
+
+.title-heading {
+  font-size: 2.15em;
+  font-weight: 750;
+  letter-spacing: -0.025em;
+  line-height: 1.02;
+  margin: 0;
+  max-width: 82%;
+}
+
+.title-subtitle {
+  color: var(--imr-muted);
+  font-size: 1.04em;
+  line-height: 1.25;
+  margin-top: 1.2rem;
+  max-width: 74%;
+}
+
+.reveal .title-slide {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.title-footer {
+  align-items: flex-end;
+  display: flex;
+  gap: 1rem;
+  margin-top: auto;
+  padding-top: 2.2rem;
+}
+
+.title-meta {
+  border-left: 5px solid var(--imr-sky);
+  color: var(--imr-muted);
+  font-size: 0.72em;
+  line-height: 1.45;
+  margin-top: 0;
+  max-width: 56%;
+  padding-left: 1rem;
+}
+
+.title-logo-wrap {
+  flex: 0 0 auto;
+}
+
+.title-logo {
+  display: block;
+  height: 64px;
+  margin: 0;
+  max-height: none;
+  max-width: 180px;
+  width: auto;
+}
+
+.title-kicker p,
+.title-heading p,
+.title-subtitle p,
+.title-meta p,
+.metric-label p,
+.metric-value p,
+.metric-note p,
+.takeaway p,
+.small-note p {
+  margin: 0;
+}
+
+.grid-2,
+.grid-3,
+.metric-grid,
+.takeaway-grid,
+.process-flow {
+  display: grid;
+  gap: 1rem;
+}
+
+.grid-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.grid-3,
+.metric-grid,
+.takeaway-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.card,
+.metric-card,
+.takeaway-card,
+.flow-step {
+  background: #ffffff;
+  border: 1px solid var(--imr-line);
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(23, 48, 66, 0.06);
+  padding: 0.85rem 1rem;
+}
+
+.card-title {
+  color: var(--imr-blue);
+  font-size: 0.9em;
+  font-weight: 750;
+  margin: 0 0 0.45rem 0;
+}
+
+.card-title p {
+  margin: 0;
+}
+
+.metric-label {
+  color: var(--imr-muted);
+  font-size: 0.62em;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.metric-value {
+  color: var(--imr-ink);
+  font-size: 1.75em;
+  font-weight: 750;
+  line-height: 1;
+  margin-top: 0.25rem;
+}
+
+.metric-note {
+  color: var(--imr-muted);
+  font-size: 0.58em;
+  margin-top: 0.35rem;
+}
+
+.process-flow {
+  align-items: stretch;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.flow-step {
+  min-height: 145px;
+}
+
+.takeaway {
+  background: var(--imr-sand);
+  border-left: 6px solid var(--imr-green);
+  border-radius: 4px;
+  font-size: 0.95em;
+  margin-top: 1rem;
+  padding: 0.65rem 0.9rem;
+}
+
+.compact {
+  font-size: 0.82em;
+}
+
+.small-note {
+  color: var(--imr-muted);
+  font-size: 0.58em;
+}
+
+.reveal table {
+  font-size: 0.66em;
+  width: 100%;
+}
+
+.reveal table th {
+  background: #e9f0f1;
+  color: var(--imr-ink);
+}
+
+.reveal table td,
+.reveal table th {
+  border-bottom: 1px solid var(--imr-line);
+  padding: 0.42em 0.5em;
+}
+
+.reveal .slide-number {
+  color: var(--imr-muted);
+  font-size: 0.5em;
+}

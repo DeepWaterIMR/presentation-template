@@ -1,0 +1,16 @@
+project:
+  title: "Presentation title"
+  subtitle: "Subtitle or description"
+  authors:
+    - "Analyst name"
+  organisation: "Institute of Marine Research"
+  meeting: "Meeting or audience title"
+  date: "YYYY-MM-DD"
+  story: "Write the one-sentence conclusion before building the slides."
+
+data:
+  adapter: "none"
+  summary_file: null
+
+render:
+  output_file: "presentation.html"
