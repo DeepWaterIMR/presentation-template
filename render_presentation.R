@@ -64,6 +64,7 @@ if (is.null(configured_output_dir) || !nzchar(configured_output_dir)) {
 }
 output_dir <- arg_value("--output-dir", configured_output_dir)
 metadata <- list(
+  pagetitle = tools::file_path_sans_ext(basename(output_file)),
   format = list(
     revealjs = list(
       "embed-resources" = TRUE
