@@ -64,6 +64,62 @@ copy_one <- function(source, destination) {
   message("  installed: ", destination)
 }
 
+copy_optional <- function(source, destination) {
+  tryCatch(
+    copy_one(source, destination),
+    error = function(error) {
+      warning(
+        "Could not install optional agent workflow file ",
+        destination,
+        ": ",
+        conditionMessage(error),
+        call. = FALSE
+      )
+    }
+  )
+}
+
+warn_if_ignored <- function(target, paths) {
+  git <- Sys.which("git")
+  if (!nzchar(git) || !dir.exists(file.path(target, ".git"))) {
+    return(invisible(NULL))
+  }
+
+  relative_paths <- vapply(
+    paths,
+    function(path) {
+      path <- normalizePath(path, mustWork = FALSE)
+      prefix <- paste0(normalizePath(target, mustWork = TRUE), .Platform$file.sep)
+      if (startsWith(path, prefix)) {
+        substring(path, nchar(prefix) + 1)
+      } else {
+        path
+      }
+    },
+    character(1)
+  )
+
+  ignored <- system2(
+    git,
+    args = c("-C", shQuote(target), "check-ignore", "--", shQuote(relative_paths)),
+    stdout = TRUE,
+    stderr = FALSE
+  )
+  status <- attr(ignored, "status")
+  if (is.null(status)) {
+    status <- 0
+  }
+  if (status == 0 && length(ignored)) {
+    warning(
+      "Some installed presentation files are ignored by the target repository:\n  ",
+      paste(ignored, collapse = "\n  "),
+      "\nAdd explicit .gitignore allowlist exceptions if these files should be versioned.",
+      call. = FALSE
+    )
+  }
+  invisible(NULL)
+}
+
 deck_files <- c(
   "README.md",
   "AGENTS.md",
@@ -94,8 +150,16 @@ for (source in deck_files) {
 }
 
 for (source in root_files) {
-  copy_one(source, file.path(target, source))
+  copy_optional(source, file.path(target, source))
 }
+
+warn_if_ignored(
+  target,
+  c(
+    file.path(deck_dir, deck_files),
+    file.path(target, root_files)
+  )
+)
 
 message("")
 message("Next steps:")

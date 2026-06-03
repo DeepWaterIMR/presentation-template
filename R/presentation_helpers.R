@@ -12,6 +12,44 @@ resolve_path <- function(path, base_dir = ".") {
   normalizePath(file.path(base_dir, path), mustWork = FALSE)
 }
 
+presentation_input_paths <- function(cfg) {
+  inputs <- cfg$data$inputs %||% list()
+  if (!length(inputs)) {
+    inputs <- list()
+  } else if (is.null(names(inputs)) || any(!nzchar(names(inputs)))) {
+    names(inputs) <- paste0("input_", seq_along(inputs))
+  }
+
+  paths <- c(
+    list(summary_file = cfg$data$summary_file %||% ""),
+    inputs
+  )
+  paths <- paths[vapply(paths, function(path) length(path) && nzchar(path), logical(1))]
+
+  lapply(paths, resolve_path, base_dir = cfg$.project_root)
+}
+
+validate_presentation_inputs <- function(cfg, require_summary = FALSE) {
+  paths <- presentation_input_paths(cfg)
+  if (require_summary && !("summary_file" %in% names(paths))) {
+    stop("presentation.yml must define data.summary_file for this adapter.")
+  }
+  if (!length(paths)) {
+    return(invisible(paths))
+  }
+
+  missing <- paths[!file.exists(unlist(paths, use.names = FALSE))]
+  if (length(missing)) {
+    stop(
+      "Configured presentation input files are missing:\n  ",
+      paste(names(missing), unlist(missing, use.names = FALSE), sep = ": ", collapse = "\n  "),
+      "\nRerun the analysis workflow, run a deck input refresh helper, or update presentation.yml."
+    )
+  }
+
+  invisible(paths)
+}
+
 read_presentation_config <- function(config_file = "presentation.yml",
                                      project_root = ".") {
   if (!requireNamespace("yaml", quietly = TRUE)) {
@@ -147,4 +185,3 @@ plot_spict_trajectories <- function(spict) {
   )
   abline(h = 1, col = "#6CA67A", lty = 2, lwd = 2)
 }
-

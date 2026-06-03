@@ -20,6 +20,10 @@ Familiarize yourself with the surrounding analysis project before proposing a
 deck. Identify its purpose, workflow, existing documentation, compact result
 objects, and candidate plots or tables.
 
+Do not put local absolute paths, credentials, private URLs, or unpublished
+personal details into committed presentation files. Intended author names,
+emails, and affiliations are acceptable presentation metadata.
+
 ## 2. Plan before slides
 
 Discuss the presentation with the analyst in a conversational style. Ask about
@@ -51,6 +55,12 @@ Prefer a small number of strong layout patterns:
 
 Read compact analysis outputs and regenerate values during render. Do not copy
 numeric values from a previous deck.
+
+If the project does not have one compact summary object, add named
+project-relative paths under `data.inputs` in `presentation.yml` and write a
+project-specific adapter or refresh helper in `R/`. For annual model-folder
+comparisons, keep the comparison data-backed and record each figure source in
+`slide-plan.md`.
 
 ## 4. Render and review
 
@@ -89,3 +99,7 @@ Keep the `.qmd`, config, helper functions, slide plan, and theme under version
 control. Publish HTML and PDF artifacts according to the project convention.
 Add a PowerPoint deliverable only if the audience requires manual rearrangement
 in Microsoft Office.
+
+After installing the starter into a project with an allowlist-style `.gitignore`,
+check that required copied files such as logo assets, `agent-workflows/`, and
+skill shims are not accidentally ignored.

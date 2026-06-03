@@ -26,8 +26,10 @@ params:
 ```{r}
 #| label: setup
 #| include: false
+knitr::opts_chunk$set(dev.args = list(bg = "transparent"), dpi = 96)
 source("R/presentation_helpers.R")
 cfg <- read_presentation_config(params$config_file, params$project_root)
+validate_presentation_inputs(cfg)
 summary_object <- load_presentation_summary(cfg)
 spict <- if (identical(cfg$data$adapter, "spict")) {
   extract_spict_context(summary_object)
@@ -67,7 +69,7 @@ Open with the purpose of the presentation in one sentence. State whether the
 audience is being asked to decide, discuss, or simply understand something.
 :::
 
-## Start with the story
+## Start with the story {data-section="Introduction"}
 
 ::: {.takeaway}
 `r cfg$project$story`
@@ -105,7 +107,7 @@ reveals the structure early, especially when the later slides contain technical
 detail.
 :::
 
-## Results update when the source project reruns
+## Results update when the source project reruns {data-section="Workflow"}
 
 :::: {.grid-2}
 ::: {.card}
@@ -146,7 +148,7 @@ For SPiCT projects, the input is the annual `sum_<stock>_spict_<year>.rds`
 summary object written by the assessment workflow.
 :::
 
-## Current model status
+## Current model status {data-section="Results"}
 
 :::: {.metric-grid}
 ::: {.metric-card}
@@ -195,14 +197,28 @@ This slide demonstrates a repeatable metric-card layout. Keep the metrics only
 when they support the main claim.
 :::
 
-## Trajectories should carry the argument
+## Trajectories should carry the argument {data-section="Results"}
 
+:::: {.text-figure}
+::: {.text-panel}
+- Put the interpretation beside the visual when the audience needs guidance.
+- Keep the text short enough that the figure remains the dominant proof object.
+
+::: {.takeaway}
+Use `.text-figure` for concise bullets on the left and a figure on the right.
+:::
+:::
+
+::: {.figure-panel}
 ```{r}
 #| label: fig-spict-trajectories
-#| fig-width: 12
+#| fig-width: 7
 #| fig-height: 4.6
+#| out-width: 100%
 plot_spict_trajectories(spict)
 ```
+:::
+::::
 
 ::: {.small-note}
 Figure caption
@@ -214,7 +230,169 @@ project for complex plotting functions and call those functions here when
 possible.
 :::
 
-## Compare scenarios in one table
+## Choose a layout by proof object {data-section="Style sampler"}
+
+:::: {.grid-3}
+::: {.card}
+::: {.card-title}
+`.grid-2` / `.grid-3`
+:::
+
+Use cards when the proof object is a small set of comparable concepts.
+:::
+
+::: {.card}
+::: {.card-title}
+`.metric-grid`
+:::
+
+Use metric cards for repeated indicators with a shared interpretation.
+:::
+
+::: {.card}
+::: {.card-title}
+`.table-slide`
+:::
+
+Use narrow tables when exact scenario values matter more than shape.
+:::
+::::
+
+::: {.takeaway}
+Pick the layout from the evidence type first, then write the slide claim.
+:::
+
+::: {.notes}
+This sampler slide is meant to make the reusable classes visible in the
+starter deck. Delete it from project decks after selecting the relevant
+patterns.
+:::
+
+## Diagnostic cards keep technical checks legible {data-section="Style sampler"}
+
+:::: {.diagnostic-grid}
+::: {.diagnostic-card}
+::: {.diagnostic-number}
+1
+:::
+::: {.card-title}
+Fit
+:::
+
+Show whether observations and fitted values disagree systematically.
+:::
+
+::: {.diagnostic-card}
+::: {.diagnostic-number}
+2
+:::
+::: {.card-title}
+Stability
+:::
+
+Show whether derived quantities change when data, years, or assumptions move.
+:::
+::::
+
+::: {.small-note}
+Use `.diagnostic-grid` for a short map of checks before showing dense
+diagnostic figures.
+:::
+
+::: {.notes}
+This style works well before residual, retrospective, sensitivity, or
+comparison plots.
+:::
+
+## Emphasis styles separate caveats from conclusions {data-section="Style sampler"}
+
+::: {.alert-box}
+Use `.alert-box` for a caveat, risk, or modelling limitation that should not be
+missed.
+:::
+
+:::: {.takeaway-grid}
+::: {.takeaway-card}
+::: {.card-title}
+Finding
+:::
+
+The evidence supports one clear statement.
+:::
+
+::: {.takeaway-card}
+::: {.card-title}
+Caveat
+:::
+
+The result has one important boundary.
+:::
+
+::: {.takeaway-card}
+::: {.card-title}
+Next step
+:::
+
+The audience knows what to do with the result.
+:::
+::::
+
+::: {.deadline}
+Use `.deadline` for review dates, decision points, or meeting constraints.
+:::
+
+::: {.closing}
+Use `.closing` for a short final line.
+:::
+
+::: {.notes}
+Use emphasis styles sparingly. They are strongest when the rest of the slide is
+quiet.
+:::
+
+## Tables can share a slide with a compact figure {data-section="Style sampler"}
+
+```{r}
+#| label: tbl-style-sampler
+knitr::kable(
+  data.frame(
+    Scenario = c("Reference", "Lower catch", "Higher catch"),
+    `Catch (t)` = c("TBD", "TBD", "TBD"),
+    `Risk` = c("TBD", "TBD", "TBD"),
+    check.names = FALSE
+  ),
+  align = c("l", "r", "r")
+)
+```
+
+::: {.scenario-figure}
+```{r}
+#| label: fig-style-sampler
+#| fig-width: 12
+#| fig-height: 2.7
+#| out-width: 100%
+old_par <- par(no.readonly = TRUE)
+par(mar = c(2.5, 3.2, 0.4, 0.4), mgp = c(1.8, 0.6, 0))
+plot(
+  1:6,
+  c(2.1, 2.4, 2.2, 2.8, 3.0, 3.2),
+  type = "b",
+  lwd = 3,
+  pch = 19,
+  col = "#056A89",
+  xlab = "Step",
+  ylab = "Relative value"
+)
+par(old_par)
+```
+:::
+
+::: {.notes}
+Use `.scenario-figure` when a narrow table needs a small visual check beneath
+it. Keep the figure compact so the table remains readable.
+:::
+
+## Compare scenarios in one table {data-section="Results"}
 
 ```{r}
 #| label: tbl-scenarios
@@ -233,7 +411,7 @@ Keep tables narrow enough to read from the back of the room. Put the full
 scenario table in an appendix if more columns are needed.
 :::
 
-## End with what should stick
+## End with what should stick {data-section="Close"}
 
 :::: {.takeaway-grid}
 ::: {.takeaway-card}

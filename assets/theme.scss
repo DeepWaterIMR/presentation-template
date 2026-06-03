@@ -29,6 +29,18 @@ $presentation-font-size-root: 30px;
   padding: 44px 58px;
 }
 
+.reveal .slides section.slide[data-section]::after {
+  bottom: 18px;
+  color: #9aa7ab;
+  content: attr(data-section);
+  font-size: 0.56em;
+  left: 50%;
+  letter-spacing: 0.04em;
+  position: absolute;
+  text-transform: uppercase;
+  transform: translateX(-50%);
+}
+
 .reveal h1,
 .reveal h2,
 .reveal h3 {
@@ -131,6 +143,9 @@ $presentation-font-size-root: 30px;
 .metric-value p,
 .metric-note p,
 .takeaway p,
+.alert-box p,
+.deadline p,
+.closing p,
 .small-note p {
   margin: 0;
 }
@@ -139,6 +154,7 @@ $presentation-font-size-root: 30px;
 .grid-3,
 .metric-grid,
 .takeaway-grid,
+.diagnostic-grid,
 .process-flow {
   display: grid;
   gap: 1rem;
@@ -146,6 +162,33 @@ $presentation-font-size-root: 30px;
 
 .grid-2 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.text-figure {
+  align-items: center;
+  display: grid;
+  gap: 1.35rem;
+  grid-template-columns: minmax(0, 0.42fr) minmax(0, 0.58fr);
+}
+
+.figure-wide-right {
+  grid-template-columns: minmax(0, 0.34fr) minmax(0, 0.66fr);
+}
+
+.map-slide {
+  grid-template-columns: minmax(0, 0.48fr) minmax(0, 0.52fr);
+}
+
+.text-figure .figure-panel img {
+  display: block;
+  margin: 0 auto;
+  max-height: 590px;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.text-figure .figure-panel img.tall {
+  max-height: 620px;
 }
 
 .grid-3,
@@ -157,6 +200,7 @@ $presentation-font-size-root: 30px;
 .card,
 .metric-card,
 .takeaway-card,
+.diagnostic-card,
 .flow-step {
   background: #ffffff;
   border: 1px solid var(--imr-line);
@@ -198,6 +242,18 @@ $presentation-font-size-root: 30px;
   margin-top: 0.35rem;
 }
 
+.diagnostic-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 2rem;
+}
+
+.diagnostic-number {
+  color: var(--imr-sky);
+  font-size: 2.2em;
+  font-weight: 750;
+  line-height: 1;
+}
+
 .process-flow {
   align-items: stretch;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -222,7 +278,58 @@ $presentation-font-size-root: 30px;
 
 .small-note {
   color: var(--imr-muted);
-  font-size: 0.58em;
+  font-size: 0.74em;
+}
+
+.scenario-figure {
+  margin-top: 0.45rem;
+}
+
+.scenario-figure .cell-output-display,
+.scenario-figure .quarto-figure,
+.scenario-figure figure,
+.scenario-figure p {
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+.reveal figcaption {
+  color: var(--imr-muted);
+  font-size: 0.74em;
+  margin-top: 0.35rem;
+  text-align: left;
+}
+
+.figure-caption {
+  margin-top: 0.35rem;
+  text-align: left;
+}
+
+.alert-box {
+  background: #f8e9e5;
+  border-left: 6px solid var(--imr-coral);
+  border-radius: 4px;
+  font-size: 0.9em;
+  font-weight: 700;
+  margin-top: 1rem;
+  padding: 0.7rem 0.9rem;
+}
+
+.deadline {
+  border-top: 2px solid var(--imr-line);
+  color: var(--imr-coral);
+  font-size: 0.92em;
+  font-weight: 750;
+  margin-top: 1.25rem;
+  padding-top: 0.55rem;
+}
+
+.closing {
+  color: var(--imr-blue);
+  font-size: 1.25em;
+  font-weight: 750;
+  margin-top: 1.5rem;
+  text-align: right;
 }
 
 .reveal table {
@@ -243,5 +350,5 @@ $presentation-font-size-root: 30px;
 
 .reveal .slide-number {
   color: var(--imr-muted);
-  font-size: 0.5em;
+  font-size: 0.54em;
 }

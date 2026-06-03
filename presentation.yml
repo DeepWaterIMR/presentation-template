@@ -11,6 +11,7 @@ project:
 data:
   adapter: "none"
   summary_file: null
+  inputs: {}
 
 render:
   output_file: "presentation.html"

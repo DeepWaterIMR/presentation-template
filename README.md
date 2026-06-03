@@ -65,7 +65,9 @@ The installer copies the deck into the chosen folder and installs the
 lightweight Codex and Claude Code skill shims at the target project root. It
 also copies deck-level `README.md`, `AGENTS.md`, and `CLAUDE.md` files into the
 presentation folder. It does not overwrite an existing project-level
-`AGENTS.md` or `CLAUDE.md`.
+`AGENTS.md` or `CLAUDE.md`. Root-level agent shims are useful but optional: if
+they cannot be installed, the installer warns and continues with the deck
+scaffold.
 
 1. Familiarize yourself with the analysis project and its compact result
    objects.
@@ -95,6 +97,17 @@ presentation folder. It does not overwrite an existing project-level
 8. Inspect the rendered presentation visually. Iterate with the analyst,
    rerender, capture screenshots again, and review the affected slides.
 
+After installing into projects with allowlist-style `.gitignore` files, check
+whether required copied files are ignored. The installer warns when Git reports
+that copied files such as logo assets, `agent-workflows/`, or skill shims are
+ignored. Add explicit allowlist exceptions when those files should be versioned.
+
+For Codex visual QA, prefer the in-app browser when it can open the local
+preview. Some environments block direct `file://` navigation or local preview
+URLs. In that case, use `capture_slides.R` and inspect its screenshots and
+contact sheet. Opening an interactive desktop browser is useful when the
+analyst wants to view the deck, but it is not required for agent QA.
+
 ## SPiCT example
 
 The beaked-redfish SPiCT project already writes a compact summary object:
@@ -120,6 +133,34 @@ generic template preview.
 The same pattern should be copied into `spict-template`: create a presentation
 folder, point its config at the current annual summary RDS, and render the deck
 after `run_assessment()`.
+
+## Projects without one compact result object
+
+Some assessment projects do not yet expose a single presentation summary object.
+Use a project-specific adapter rather than transcribing values by hand:
+
+1. List stable, project-relative inputs in `presentation.yml`.
+
+   ```yaml
+   data:
+     adapter: "project_adapter_name"
+     summary_file: "path/to/current-model-output.rds"
+     inputs:
+       previous_model_data: "path/to/previous-model-data.rds"
+       historic_retro: "path/to/historic-retrospective.csv"
+   ```
+
+2. Add adapter and plotting helpers in `R/`. For small extracts from nearby
+   repositories, add a refresh helper in `R/` and store the compact extracted
+   input with the deck.
+3. Keep ordinary renders self-contained. A future rerender should not depend on
+   local absolute paths or a neighbouring repository still being in the same
+   place.
+
+For comparisons between annual model folders, keep the comparison data-backed:
+declare the model outputs in `data.inputs`, build figures from those inputs
+during render, and record the source table or model object for each slide in
+`slide-plan.md`.
 
 ## Files
 
@@ -152,8 +193,19 @@ without loading a long set of instructions into every session.
 ## Visual quality rules
 
 - Use a small set of layout classes instead of freehand absolute positioning.
+- Use `.text-figure` for a two-column slide with concise text on the left and a
+  dominant figure on the right.
+- Add `data-section="Section name"` to slide headers when a quiet grey
+  center-bottom section label improves navigation.
+- Use `.figure-wide-right` or `.map-slide` as modifiers for `.text-figure` when
+  the proof object needs more space.
+- Use `.alert-box`, `.deadline`, and `.closing` sparingly for decision-facing
+  warnings, review deadlines, and closing text.
 - Give every slide one claim and one dominant visual or table.
 - Use short titles that state the finding.
+- Keep all visible text at least 16 pt. The starter `.small-note` class is
+  intentionally larger than a conventional document footnote so captions
+  remain readable during a meeting.
 - Keep repeated metrics in consistent cards.
 - Put details in speaker notes or the appendix.
 - Review a contact sheet after every substantial change.
@@ -166,3 +218,9 @@ bundle is:
 3. one screenshot per slide
 4. one contact sheet
 5. the compact result object or a small extracted table of metrics
+
+When a presentation needs a small extract from a neighbouring repository,
+write a refresh helper in the deck's `R/` folder and keep the compact extract
+with the deck. The ordinary render should stay self-contained so that the
+presentation remains reproducible after the surrounding projects move or
+change.
