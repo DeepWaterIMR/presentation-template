@@ -96,6 +96,22 @@ format_num <- function(x, digits = 2, suffix = "") {
   paste0(format(round(x, digits), trim = TRUE, big.mark = ","), suffix)
 }
 
+presentation_theme <- function(base_size = 18) {
+  if (!requireNamespace("ggplot2", quietly = TRUE)) {
+    stop("Install the R package 'ggplot2' before using presentation_theme().")
+  }
+
+  ggplot2::theme_classic(base_size = base_size) +
+    ggplot2::theme(
+      panel.background = ggplot2::element_blank(),
+      plot.background = ggplot2::element_blank(),
+      legend.background = ggplot2::element_blank(),
+      legend.box.background = ggplot2::element_blank(),
+      legend.key = ggplot2::element_blank(),
+      strip.background = ggplot2::element_blank()
+    )
+}
+
 extract_spict_context <- function(summary) {
   if (is.null(summary)) {
     return(NULL)

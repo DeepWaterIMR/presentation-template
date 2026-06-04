@@ -2,7 +2,8 @@
 
 Agree on this overview before expanding `presentation.qmd`. Add, remove, and
 reorder slides freely. Keep one row per slide. Keep the plan free of local
-absolute paths, credentials, and unpublished personal details.
+absolute paths, credentials, and unpublished personal details. Do not build or
+render a new deck until the user has explicitly approved the proposed overview.
 
 ## Claim Spine
 

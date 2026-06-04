@@ -76,7 +76,9 @@ scaffold.
 3. Draft `slide-plan.md`. Each slide gets one claim, one proof object, a layout,
    draft slide text, and speaker notes.
 4. Present the proposed slide overview to the analyst and wait for explicit
-   approval.
+   approval. This is a hard gate for new decks: do not expand
+   `presentation.qmd` or render slides until the analyst says to build the
+   approved plan.
 5. Update `presentation.qmd`, keeping computations in source code or a compact
    result object.
 6. Render from the presentation folder:
@@ -94,19 +96,23 @@ scaffold.
    /usr/local/bin/Rscript capture_slides.R
    ```
 
-8. Inspect the rendered presentation visually. Iterate with the analyst,
-   rerender, capture screenshots again, and review the affected slides.
+8. Inspect the rendered presentation visually. When modifying an already
+   approved deck, rerender and inspect the affected slides without asking first.
+   If the result does not match the request, correct it, rerender, and inspect
+   again before delivering.
 
 After installing into projects with allowlist-style `.gitignore` files, check
 whether required copied files are ignored. The installer warns when Git reports
 that copied files such as logo assets, `agent-workflows/`, or skill shims are
 ignored. Add explicit allowlist exceptions when those files should be versioned.
 
-For Codex visual QA, prefer the in-app browser when it can open the local
-preview. Some environments block direct `file://` navigation or local preview
-URLs. In that case, use `capture_slides.R` and inspect its screenshots and
-contact sheet. Opening an interactive desktop browser is useful when the
-analyst wants to view the deck, but it is not required for agent QA.
+For Codex visual QA, use the app's integrated browser or viewer when it can
+inspect the rendered deck in the background without disturbing the analyst. Do
+not launch or take over the analyst's desktop browser for agent QA. If an
+integrated browser/viewer is unavailable or blocked, use `capture_slides.R` and
+inspect its screenshots and contact sheet. The capture script is designed for a
+background Chromium-compatible QA browser with an isolated temporary profile; it
+does not auto-select the user's installed Chrome or Brave app.
 
 ## SPiCT example
 
@@ -181,10 +187,17 @@ cause. Keep them light:
 
 - Render inline figures at screen resolution (`fig.retina = 1`, set in the
   `presentation.qmd` setup chunk).
+- Use a transparent graphics device for inline plots (`dev = "png"`,
+  `dev.args = list(bg = "transparent")`) and make ggplot panel, plot, legend,
+  and legend-key backgrounds transparent. The starter sets
+  `ggplot2::theme_set(presentation_theme())` when ggplot2 is available.
 - Pre-optimize external images (compress and resize) into an `optimized/` folder
   before embedding them. Keep the originals elsewhere.
 - On a wide (~21:9) canvas, scale figure `base_size` and linewidths up so labels
   and lines stay legible; the default ggplot sizes look thin when stretched.
+- Check the rendered HTML file size before delivery. If it has grown to tens of
+  megabytes, optimize embedded images or lower inline figure dimensions before
+  sharing.
 
 ## Files
 
@@ -226,6 +239,8 @@ without loading a long set of instructions into every session.
 - For figure-heavy science slides, pair RevealJS `.columns` with an `.absolute`
   figure in the wide column when one chart or map must dominate. This is a
   supported pattern; see the "text column beside a large figure" sampler slide.
+  For the `ref-index` style, constrain the title width and place the figure with
+  syntax like `![](...){.absolute top=-150 right=-100 height=1000}`.
 - Pace arguments with fragments: `.fragment` reveals bullets in turn, and a
   `.r-stack` with paired `.fade-out` / `.fade-in` swaps figures in place (e.g.
   two species or two scenarios) without moving the audience's eye.
@@ -236,6 +251,10 @@ without loading a long set of instructions into every session.
 - Keep all visible text at least 16 pt. The starter `.small-note` class is
   intentionally larger than a conventional document footnote so captions
   remain readable during a meeting.
+- Most presentation figures and tables should not have captions. If captions
+  are wanted, add them explicitly in the R chunk using `fig-cap` or `tbl-cap`.
+  Otherwise avoid `fig-` and `tbl-` chunk labels and omit placeholder captions
+  so Quarto does not render "Figure 1" or "Table 1" headers.
 - Keep repeated metrics in consistent cards.
 - Put details in speaker notes or the appendix.
 - Review a contact sheet after every substantial change.

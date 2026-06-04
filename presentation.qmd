@@ -17,7 +17,7 @@ format:
     progress: true
     controls: true
     transition: fade
-    embed-resources: false
+    embed-resources: true
 execute:
   echo: false
   warning: false
@@ -34,11 +34,15 @@ params:
 # inline figures at screen (1x) resolution. Pre-optimize any external images
 # into an `optimized/` folder before embedding them (see README "File size").
 knitr::opts_chunk$set(
+  dev = "png",
   dev.args = list(bg = "transparent"),
   dpi = 96,
   fig.retina = 1
 )
 source("R/presentation_helpers.R")
+if (requireNamespace("ggplot2", quietly = TRUE)) {
+  ggplot2::theme_set(presentation_theme())
+}
 cfg <- read_presentation_config(params$config_file, params$project_root)
 validate_presentation_inputs(cfg)
 summary_object <- load_presentation_summary(cfg)
@@ -222,7 +226,7 @@ Use `.text-figure` for concise bullets on the left and a figure on the right.
 
 ::: {.figure-panel}
 ```{r}
-#| label: fig-spict-trajectories
+#| label: plot-spict-trajectories
 #| fig-width: 7
 #| fig-height: 4.6
 #| out-width: 100%
@@ -230,10 +234,6 @@ plot_spict_trajectories(spict)
 ```
 :::
 ::::
-
-::: {.small-note}
-Figure caption
-:::
 
 ::: {.notes}
 Charts should be generated from the compact result object. Use the analysis
@@ -361,7 +361,7 @@ Use emphasis styles sparingly. They are strongest when the rest of the slide is
 quiet.
 :::
 
-## A text column can sit beside a large figure {data-section="Style sampler"}
+## A wrapped title can sit beside a full-height figure {.bleed-figure-slide data-section="Style sampler"}
 
 :::: {.columns}
 
@@ -384,12 +384,13 @@ chart or map must dominate the slide.
 
 :::
 
-::: {.column width="60%"}
-::: {.absolute top=70 right=0 width=900}
+::: {.column width="60%" .add-space}
+::: {.absolute top=-150 right=-100 height=1000}
 ```{r}
-#| label: bleed-figure-demo
+#| label: plot-bleed-figure-demo
 #| fig-width: 9
-#| fig-height: 5
+#| fig-height: 6
+#| out-height: 1000px
 plot_spict_trajectories(spict)
 ```
 :::
@@ -399,9 +400,11 @@ plot_spict_trajectories(spict)
 
 ::: {.notes}
 On a figure-heavy science slide, a narrow text column beside a large `.absolute`
-figure usually reads better than a balanced two-column grid. On a wide (~21:9)
-canvas the figure can extend close to the slide edge. Use fragments to pace the
-argument, and keep the figure the dominant proof object.
+figure usually reads better than a balanced two-column grid. This mirrors the
+manual `ref-index` pattern: constrain the title width, put bullets in the left
+column, and place the dominant figure with `top=-150 right=-100 height=1000`.
+On a wide (~21:9) canvas the figure can extend close to the slide edge. Use
+fragments to pace the argument, and keep the figure the dominant proof object.
 :::
 
 ## Swap two figures in the same spot {data-section="Style sampler"}
@@ -410,7 +413,7 @@ argument, and keep the figure the dominant proof object.
 
 ::: {.fragment .fade-out fragment-index=1}
 ```{r}
-#| label: swap-figure-a
+#| label: plot-swap-a
 #| fig-width: 11
 #| fig-height: 4.6
 #| out-width: 100%
@@ -420,7 +423,7 @@ plot_spict_trajectories(spict)
 
 ::: {.fragment .fade-in fragment-index=1}
 ```{r}
-#| label: swap-figure-b
+#| label: plot-swap-b
 #| fig-width: 11
 #| fig-height: 4.6
 #| out-width: 100%
@@ -445,7 +448,7 @@ sequence so each figure appears, then clears for the next.
 ## Tables can share a slide with a compact figure {data-section="Style sampler"}
 
 ```{r}
-#| label: tbl-style-sampler
+#| label: table-style-sampler
 knitr::kable(
   data.frame(
     Scenario = c("Reference", "Lower catch", "Higher catch"),
@@ -459,7 +462,7 @@ knitr::kable(
 
 ::: {.scenario-figure}
 ```{r}
-#| label: fig-style-sampler
+#| label: plot-style-sampler
 #| fig-width: 12
 #| fig-height: 2.7
 #| out-width: 100%
@@ -487,7 +490,7 @@ it. Keep the figure compact so the table remains readable.
 ## Compare scenarios in one table {data-section="Results"}
 
 ```{r}
-#| label: tbl-scenarios
+#| label: scenario-table
 knitr::kable(
   scenario_table(spict),
   align = c("l", "r", "r", "r")

@@ -40,7 +40,10 @@ one. Update `slide-plan.md` as the discussion develops with:
 
 Present the proposed overview from `slide-plan.md` to the analyst. Do not edit
 `presentation.qmd` or render the deck until the analyst explicitly approves the
-plan.
+plan. Treat this as a hard gate: even if the analyst asks you to "make a
+presentation", first ask the planning questions, write the plan, show the
+overview, and wait for an explicit approval such as "approved", "go ahead", or
+"build it".
 
 ## 3. Build
 
@@ -73,6 +76,11 @@ Keep the self-contained HTML small: render inline figures at screen resolution
 (`fig.retina = 1`) and pre-optimize external images into an `optimized/` folder
 before embedding them.
 
+Most presentation figures and tables should not have visible captions. If the
+analyst wants captions, add them with `fig-cap` or `tbl-cap` in the R chunk.
+Otherwise avoid `fig-` and `tbl-` chunk labels and do not add placeholder
+caption text.
+
 ## 4. Render and review
 
 Render with:
@@ -82,7 +90,9 @@ Render with:
 ```
 
 This writes the ordinary working HTML beside `presentation.qmd` as a
-self-contained file that can be shared directly.
+self-contained file that can be shared directly. Render through this script so
+the browser tab title is derived from `presentation.yml` `render.output_file`
+without the `.html` extension.
 
 Capture screenshots and a contact sheet:
 
@@ -95,15 +105,19 @@ hierarchy, awkward whitespace, inconsistent spacing, and slides without a
 dominant proof object. Also check the rendered HTML file size: if it has grown
 to tens of megabytes, optimize the embedded images before delivering.
 
-If Codex has the deck open in the in-app browser, inspect the rendered slides
-there after each substantial layout change. Otherwise capture screenshots with
-a local browser and inspect those images.
+If the app running the agent has an integrated browser or viewer, use that
+surface for visual inspection in the background without disturbing the analyst.
+Do not launch or take over the user's desktop browser for agent QA. Otherwise,
+use `capture_slides.R`, which is designed to capture slides with a background
+QA browser and an isolated temporary profile.
 
 Avoid reading generated HTML as text to judge layout. Read the source `.qmd`
 for semantics and use the in-app browser or rendered images for appearance.
 
-Iterate with the analyst: make the requested change, rerender, visually inspect
-the affected slides, and report what changed.
+After any requested slide, layout, theme, figure-size, or rendering change to an
+already approved deck, rerender and visually inspect the affected slides without
+asking first. If the result does not match the request, keep correcting,
+rerendering, and inspecting until it does or until a real blocker remains.
 
 ## 5. Deliver
 

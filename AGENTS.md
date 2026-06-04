@@ -20,7 +20,9 @@ or extracted tables that could drive the presentation.
 3. Update `slide-plan.md` as the discussion develops.
 4. Present the proposed slide overview from `slide-plan.md` to the user.
 5. Wait for explicit approval before expanding `presentation.qmd` or rendering
-   the deck.
+   the deck. This is a hard gate for new decks: ask the planning questions,
+   write and show the plan, and wait for an explicit approval such as
+   "approved", "go ahead", or "build it".
 6. Read compact result objects or small extracted tables. Never transcribe
    model results manually when a rerenderable source exists.
 7. Build and render the presentation in its working folder.
@@ -48,9 +50,17 @@ or extracted tables that could drive the presentation.
   swap figures in place. Keep the static slide legible if fragments are skipped.
 - On a wide (~21:9) canvas, scale figure `base_size` and linewidths up so labels
   and lines do not look thin.
+- For the `ref-index` style, constrain the slide title width and place a
+  dominant figure on the right with syntax like
+  `![](...){.absolute top=-150 right=-100 height=1000}`, with bullets in a left
+  column.
 - Keep slide text concise. Move detailed explanation into `.notes`.
 - Keep all visible text at least 16 pt, including captions, legends, table
   text, section labels, and slide numbers.
+- Use figure and table captions only when the analyst wants them. In Quarto,
+  add captions with `fig-cap` or `tbl-cap` in the R chunk. Otherwise avoid
+  `fig-` and `tbl-` chunk labels and do not add placeholder captions, so the
+  rendered deck does not show "Figure 1" or "Table 1" headers.
 - Keep analysis logic in the analysis project or in small helper functions.
 
 ## Data rules
@@ -71,6 +81,10 @@ or extracted tables that could drive the presentation.
   (`fig.retina = 1`) and pre-optimize any external images (compress, resize)
   into an `optimized/` folder before embedding. Large embedded maps and photos,
   not code, are what make these decks balloon to tens of megabytes.
+- Use transparent figure backgrounds. In setup chunks use
+  `dev = "png", dev.args = list(bg = "transparent")`; for ggplot2 also set
+  transparent `panel.background`, `plot.background`, `legend.background`,
+  `legend.box.background`, and `legend.key`.
 - When a figure needs a small extract from another repository, add a refresh
   helper in `R/` and keep the compact extracted input with the deck. Ordinary
   renders should remain self-contained years later.
@@ -82,31 +96,29 @@ or extracted tables that could drive the presentation.
 ## Visual QA
 
 - Review rendered slides visually after substantial changes.
-- When working in Codex with the in-app browser open, inspect the rendered deck
-  there before considering slide edits complete.
-- Prefer the Codex in-app browser over launching an interactive desktop
-  browser. Direct `file://` navigation may be blocked; try a local preview
-  server. If the in-app browser also blocks local URLs, use `capture_slides.R`
-  and inspect the generated screenshots instead.
-- Do not open the system default browser solely for agent QA: it can put the
-  deck in front of the analyst, but it does not provide an inspectable agent
-  surface.
+- When working in an app with an integrated browser or viewer, inspect the
+  rendered deck there in the background before considering slide edits complete.
+- Do not launch or take over the user's desktop browser solely for agent QA.
 - Use `capture_slides.R` to create screenshots and a contact sheet for AI
-  review.
-- If the in-app browser is not available, capture screenshots with a local
-  browser or other rendering tool and inspect those images instead.
+  review when an integrated browser/viewer is not available. The script should
+  use a background QA browser with an isolated temporary profile, not the user's
+  interactive browser.
 - Do not read a large generated HTML presentation as text to infer appearance.
 - Check for overflow, tiny labels, inconsistent spacing, crowded tables, and
   slides without a clear visual hierarchy.
-- After changing slide layout, theme, or figure sizing, do at least one visual
-  inspection pass before delivering the result.
+- After changing slide layout, theme, figure sizing, or rendering behavior in an
+  already approved deck, rerender and inspect the affected slides without asking
+  first. If the result does not work as intended, correct the slide, rerender,
+  and inspect again before delivering the result.
 
 ## Generated files
 
 - Edit source files, not generated HTML.
 - Do not commit local absolute paths.
 - Render the ordinary working HTML beside `presentation.qmd` as a self-contained
-  single file.
+  single file with `embed-resources: true`.
+- Render through `render_presentation.R` so the browser tab title is set from
+  `render.output_file` without the `.html` extension.
 
 ## Installation lessons
 

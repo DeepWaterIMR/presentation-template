@@ -79,6 +79,24 @@ if (!is.null(output_dir)) {
   message("  output dir:   ", output_dir)
 }
 
+report_output_size <- function(path) {
+  if (!file.exists(path)) {
+    return(invisible(NULL))
+  }
+  size_mb <- file.info(path)$size / 1024^2
+  message(sprintf("Rendered HTML size: %.1f MB", size_mb))
+  if (is.finite(size_mb) && size_mb > 25) {
+    warning(
+      sprintf(
+        "Rendered HTML is %.1f MB. Optimize or resize embedded images before sharing.",
+        size_mb
+      ),
+      call. = FALSE
+    )
+  }
+  invisible(size_mb)
+}
+
 render_once <- function() {
   quarto::quarto_render(
     input = "presentation.qmd",
@@ -94,6 +112,7 @@ render_once <- function() {
 
 if (is.null(output_dir)) {
   render_once()
+  report_output_size(output_file)
   local_assets <- file.path(
     dirname(normalizePath(output_file, mustWork = FALSE)),
     paste0(tools::file_path_sans_ext(basename(output_file)), "_files")
@@ -132,4 +151,5 @@ if (is.null(output_dir)) {
 
   unlink(build_dir, recursive = TRUE)
   message("Isolated preview created: ", final_output)
+  report_output_size(final_output)
 }

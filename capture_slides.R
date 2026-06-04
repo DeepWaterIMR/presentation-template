@@ -3,7 +3,12 @@
 # Examples:
 #   Rscript capture_slides.R
 #   Rscript capture_slides.R --html presentation.html
-#   Rscript capture_slides.R --browser "/path/to/chrome"
+#   Rscript capture_slides.R --browser "/path/to/background/chromium"
+#
+# This script is for background QA. It does not auto-launch the user's
+# interactive desktop browser. Pass --browser or PRESENTATION_QA_BROWSER to use
+# a known headless/QA browser executable, or install Chromium/Playwright's
+# browser cache so the script can find a non-interactive browser.
 
 args <- commandArgs(trailingOnly = TRUE)
 
@@ -39,13 +44,46 @@ html_file <- normalizePath(
 output_dir <- arg_value("--output-dir", "qa")
 dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
 
+existing <- function(paths) {
+  paths <- paths[!is.na(paths) & nzchar(paths)]
+  paths[file.exists(paths)]
+}
+
+playwright_browser_candidates <- function() {
+  roots <- existing(c(
+    Sys.getenv("PLAYWRIGHT_BROWSERS_PATH", unset = ""),
+    file.path(Sys.getenv("HOME", unset = ""), ".cache", "ms-playwright"),
+    file.path(Sys.getenv("HOME", unset = ""), "Library", "Caches", "ms-playwright")
+  ))
+  if (!length(roots)) {
+    return(character())
+  }
+
+  patterns <- c(
+    file.path("chromium-*", "chrome-mac", "Chromium.app", "Contents", "MacOS", "Chromium"),
+    file.path("chromium-*", "chrome-linux", "chrome"),
+    file.path("chromium-*", "chrome-win", "chrome.exe"),
+    file.path("chromium_headless_shell-*", "chrome-mac", "headless_shell"),
+    file.path("chromium_headless_shell-*", "chrome-linux", "headless_shell"),
+    file.path("chromium_headless_shell-*", "chrome-win", "headless_shell.exe")
+  )
+
+  unique(unlist(
+    lapply(
+      roots,
+      function(root) {
+        unlist(lapply(patterns, function(pattern) Sys.glob(file.path(root, pattern))))
+      }
+    )
+  ))
+}
+
 browser_candidates <- c(
   arg_value("--browser"),
-  Sys.which("google-chrome"),
+  Sys.getenv("PRESENTATION_QA_BROWSER", unset = ""),
   Sys.which("chromium"),
   Sys.which("chromium-browser"),
-  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
-  "/Applications/Brave Browser.app/Contents/MacOS/Brave Browser"
+  playwright_browser_candidates()
 )
 browser_candidates <- browser_candidates[
   !is.na(browser_candidates) &
@@ -54,11 +92,14 @@ browser_candidates <- browser_candidates[
 ]
 if (!length(browser_candidates)) {
   stop(
-    "Could not find a Chrome-compatible browser. ",
-    "Pass its executable path with --browser."
+    "Could not find a background Chromium-compatible QA browser. ",
+    "Install Chromium or Playwright's browser cache, or pass an explicit ",
+    "QA browser executable with --browser or PRESENTATION_QA_BROWSER. ",
+    "The script does not auto-launch the user's desktop browser."
   )
 }
 browser <- browser_candidates[[1]]
+message("Using background QA browser: ", browser)
 
 html <- readLines(html_file, warn = FALSE)
 section_lines <- grep(

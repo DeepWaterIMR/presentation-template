@@ -179,12 +179,20 @@ $presentation-font-size-root: 30px;
   grid-template-columns: minmax(0, 0.48fr) minmax(0, 0.52fr);
 }
 
+.reveal .slides section.bleed-figure-slide h2 {
+  max-width: 44%;
+}
+
 /* Bleeding figure layout: a narrow text column beside a large figure that may
    run toward, or past, the slide edge. Pair RevealJS `.columns`/`.column` with
    an `.absolute` figure inside the wide column. Use on figure-heavy science
    slides where one chart or map must dominate. */
 .reveal .column .absolute {
   margin: 0;
+}
+
+.add-space {
+  min-height: 1px;
 }
 
 /* Decorative or hero images (species art, logos, overlay figures placed with
