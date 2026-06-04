@@ -162,6 +162,30 @@ declare the model outputs in `data.inputs`, build figures from those inputs
 during render, and record the source table or model object for each slide in
 `slide-plan.md`.
 
+### Reusing an existing data-loading script
+
+A deck that presents a manuscript or analysis often does not need a new summary
+object: the project already has a script that loads the figure inputs (indices,
+fits, correlation tables, and so on). Sourcing that script from the setup chunk
+is a valid alternative to a single `summary_file`, as long as figures are
+regenerated at render time rather than transcribed. Point at the script with a
+project-relative path, fail clearly when it is missing, and keep the compact
+inputs the figures depend on with the deck so ordinary renders stay
+self-contained.
+
+## File size and figures
+
+Self-contained HTML decks embed every figure and image, so they can balloon to
+tens of megabytes — large embedded maps and photos, not code, are the usual
+cause. Keep them light:
+
+- Render inline figures at screen resolution (`fig.retina = 1`, set in the
+  `presentation.qmd` setup chunk).
+- Pre-optimize external images (compress and resize) into an `optimized/` folder
+  before embedding them. Keep the originals elsewhere.
+- On a wide (~21:9) canvas, scale figure `base_size` and linewidths up so labels
+  and lines stay legible; the default ggplot sizes look thin when stretched.
+
 ## Files
 
 ```text
@@ -199,6 +223,12 @@ without loading a long set of instructions into every session.
   center-bottom section label improves navigation.
 - Use `.figure-wide-right` or `.map-slide` as modifiers for `.text-figure` when
   the proof object needs more space.
+- For figure-heavy science slides, pair RevealJS `.columns` with an `.absolute`
+  figure in the wide column when one chart or map must dominate. This is a
+  supported pattern; see the "text column beside a large figure" sampler slide.
+- Pace arguments with fragments: `.fragment` reveals bullets in turn, and a
+  `.r-stack` with paired `.fade-out` / `.fade-in` swaps figures in place (e.g.
+  two species or two scenarios) without moving the audience's eye.
 - Use `.alert-box`, `.deadline`, and `.closing` sparingly for decision-facing
   warnings, review deadlines, and closing text.
 - Give every slide one claim and one dominant visual or table.

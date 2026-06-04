@@ -50,6 +50,10 @@ Prefer a small number of strong layout patterns:
 - title slide
 - two-column explanation
 - chart with one takeaway
+- text column beside a large figure (`.columns` + an `.absolute` figure) for
+  figure-heavy science slides
+- progressive reveal with `.fragment`, and figure-swap in a `.r-stack` with
+  paired `.fade-out` / `.fade-in`
 - narrow scenario table
 - three-card conclusion
 
@@ -58,9 +62,16 @@ numeric values from a previous deck.
 
 If the project does not have one compact summary object, add named
 project-relative paths under `data.inputs` in `presentation.yml` and write a
-project-specific adapter or refresh helper in `R/`. For annual model-folder
-comparisons, keep the comparison data-backed and record each figure source in
-`slide-plan.md`.
+project-specific adapter or refresh helper in `R/`. When the project already has
+a data-loading script that builds the figure inputs (common for manuscript
+decks), sourcing it from the setup chunk is a valid alternative to a single
+summary object, as long as figures are regenerated rather than transcribed. For
+annual model-folder comparisons, keep the comparison data-backed and record each
+figure source in `slide-plan.md`.
+
+Keep the self-contained HTML small: render inline figures at screen resolution
+(`fig.retina = 1`) and pre-optimize external images into an `optimized/` folder
+before embedding them.
 
 ## 4. Render and review
 
@@ -81,7 +92,8 @@ Capture screenshots and a contact sheet:
 
 Review the images. Check for overflow, small text, visual clutter, weak
 hierarchy, awkward whitespace, inconsistent spacing, and slides without a
-dominant proof object.
+dominant proof object. Also check the rendered HTML file size: if it has grown
+to tens of megabytes, optimize the embedded images before delivering.
 
 If Codex has the deck open in the in-app browser, inspect the rendered slides
 there after each substantial layout change. Otherwise capture screenshots with

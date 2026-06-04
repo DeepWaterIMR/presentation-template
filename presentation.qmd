@@ -6,6 +6,10 @@ format:
       - assets/theme.scss
     width: 1600
     height: 900
+    # Figure-heavy science talks that need a text column beside a large figure
+    # often read better on a wider canvas. To use ~21:9, set:
+    #   width: 2100
+    # and scale figure base_size / linewidths up to match (see the setup chunk).
     center: false
     slide-number: c/t
     hash: true
@@ -26,7 +30,14 @@ params:
 ```{r}
 #| label: setup
 #| include: false
-knitr::opts_chunk$set(dev.args = list(bg = "transparent"), dpi = 96)
+# Keep embedded figures light so the self-contained HTML stays small: render
+# inline figures at screen (1x) resolution. Pre-optimize any external images
+# into an `optimized/` folder before embedding them (see README "File size").
+knitr::opts_chunk$set(
+  dev.args = list(bg = "transparent"),
+  dpi = 96,
+  fig.retina = 1
+)
 source("R/presentation_helpers.R")
 cfg <- read_presentation_config(params$config_file, params$project_root)
 validate_presentation_inputs(cfg)
@@ -348,6 +359,87 @@ Use `.closing` for a short final line.
 ::: {.notes}
 Use emphasis styles sparingly. They are strongest when the rest of the slide is
 quiet.
+:::
+
+## A text column can sit beside a large figure {data-section="Style sampler"}
+
+:::: {.columns}
+
+::: {.column width="40%"}
+
+- Put the interpretation in a narrow column on the left.
+- Reveal bullets one at a time when the audience needs to follow a chain of
+  reasoning.
+
+::: {.fragment}
+- A `.fragment` appears on the next click.
+:::
+
+::: {.fragment}
+::: {.takeaway}
+Pair RevealJS `.columns` with an `.absolute` figure in the wide column when one
+chart or map must dominate the slide.
+:::
+:::
+
+:::
+
+::: {.column width="60%"}
+::: {.absolute top=70 right=0 width=900}
+```{r}
+#| label: bleed-figure-demo
+#| fig-width: 9
+#| fig-height: 5
+plot_spict_trajectories(spict)
+```
+:::
+:::
+
+::::
+
+::: {.notes}
+On a figure-heavy science slide, a narrow text column beside a large `.absolute`
+figure usually reads better than a balanced two-column grid. On a wide (~21:9)
+canvas the figure can extend close to the slide edge. Use fragments to pace the
+argument, and keep the figure the dominant proof object.
+:::
+
+## Swap two figures in the same spot {data-section="Style sampler"}
+
+::: {.r-stack}
+
+::: {.fragment .fade-out fragment-index=1}
+```{r}
+#| label: swap-figure-a
+#| fig-width: 11
+#| fig-height: 4.6
+#| out-width: 100%
+plot_spict_trajectories(spict)
+```
+:::
+
+::: {.fragment .fade-in fragment-index=1}
+```{r}
+#| label: swap-figure-b
+#| fig-width: 11
+#| fig-height: 4.6
+#| out-width: 100%
+plot_spict_trajectories(spict)
+```
+:::
+
+:::
+
+::: {.small-note}
+Stack figures in a `.r-stack` and pair `.fade-out` / `.fade-in` on the same
+`fragment-index` to swap one figure for another in place — useful for comparing
+two species, scenarios, or model variants without moving the audience's eye.
+:::
+
+::: {.notes}
+Both panels here draw the same placeholder; in a real deck the two chunks would
+plot different objects. Use `.fade-in-then-out` for the middle steps of a longer
+sequence so each figure appears, then clears for the next.
 :::
 
 ## Tables can share a slide with a compact figure {data-section="Style sampler"}

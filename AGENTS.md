@@ -37,8 +37,17 @@ or extracted tables that could drive the presentation.
   figure on the right.
 - Add `data-section="Section name"` to ordinary slide headers when the deck
   benefits from a quiet grey section label at the bottom of each slide.
-- Avoid absolute positioning unless a slide genuinely needs a hero image or a
-  small decorative accent.
+- For figure-heavy science slides, pair RevealJS `.columns` with an `.absolute`
+  figure in the wide column when one chart or map must dominate and a balanced
+  grid would crowd it. This is a supported pattern, not a last resort; see the
+  "text column beside a large figure" sampler slide in `presentation.qmd`.
+- Reserve freehand absolute positioning (arbitrary offsets unrelated to the
+  column pattern) for genuine hero images or small decorative accents.
+- Use fragments to pace an argument: `.fragment` to reveal bullets in turn, and
+  a `.r-stack` with paired `.fade-out` / `.fade-in` (or `.fade-in-then-out`) to
+  swap figures in place. Keep the static slide legible if fragments are skipped.
+- On a wide (~21:9) canvas, scale figure `base_size` and linewidths up so labels
+  and lines do not look thin.
 - Keep slide text concise. Move detailed explanation into `.notes`.
 - Keep all visible text at least 16 pt, including captions, legends, table
   text, section labels, and slide numbers.
@@ -51,8 +60,17 @@ or extracted tables that could drive the presentation.
 - When one compact result object does not exist, add named project-relative
   entries under `data.inputs` and write a project-specific adapter or refresh
   helper in `R/`.
+- When a deck presents a manuscript or analysis that already has a data-loading
+  script building the objects the figures need, sourcing that script is a valid
+  alternative to a single summary object. Point to it from `presentation.yml`
+  and keep figures regenerated at render time. Still stop with a clear message
+  if it is missing; never transcribe numbers by hand.
 - If a required result object is missing, stop with a clear message. Do not
   invent numbers or silently use stale values.
+- Keep the self-contained HTML small. Render inline figures at screen resolution
+  (`fig.retina = 1`) and pre-optimize any external images (compress, resize)
+  into an `optimized/` folder before embedding. Large embedded maps and photos,
+  not code, are what make these decks balloon to tens of megabytes.
 - When a figure needs a small extract from another repository, add a refresh
   helper in `R/` and keep the compact extracted input with the deck. Ordinary
   renders should remain self-contained years later.
