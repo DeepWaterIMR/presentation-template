@@ -361,50 +361,33 @@ Use emphasis styles sparingly. They are strongest when the rest of the slide is
 quiet.
 :::
 
-## A wrapped title can sit beside a full-height figure {.bleed-figure-slide data-section="Style sampler"}
+## A wrapped title can sit beside a full-height figure {.fit-narrow data-section="Style sampler"}
 
-:::: {.columns}
-
-::: {.column width="40%"}
-
+::: {.fit-results}
 - Put the interpretation in a narrow column on the left.
-- Reveal bullets one at a time when the audience needs to follow a chain of
-  reasoning.
+- Keep bullets brief — the figure is the proof object.
+- Subscript reference points with Pandoc inline notation, e.g. B~MSY~ and
+  F~MSY~, so they render correctly in both HTML and PDF.
 
 ::: {.fragment}
 - A `.fragment` appears on the next click.
 :::
-
-::: {.fragment}
-::: {.takeaway}
-Pair RevealJS `.columns` with an `.absolute` figure in the wide column when one
-chart or map must dominate the slide.
-:::
 :::
 
-:::
-
-::: {.column width="60%" .add-space}
-::: {.absolute top=-150 right=-100 height=1000}
-```{r}
-#| label: plot-bleed-figure-demo
-#| fig-width: 9
-#| fig-height: 6
-#| out-height: 1000px
-plot_spict_trajectories(spict)
-```
-:::
-:::
-
-::::
+<!-- Replace with the real figure path. Portrait: height="1000"; landscape
+     (add .fit-narrow-tight to the heading): width="950". -->
+![](assets/HI_logo_farger_engelsk.png){.absolute top=-150 right=-100 height="1000"}
 
 ::: {.notes}
-On a figure-heavy science slide, a narrow text column beside a large `.absolute`
-figure usually reads better than a balanced two-column grid. This mirrors the
-manual `ref-index` pattern: constrain the title width, put bullets in the left
-column, and place the dominant figure with `top=-150 right=-100 height=1000`.
-On a wide (~21:9) canvas the figure can extend close to the slide edge. Use
-fragments to pace the argument, and keep the figure the dominant proof object.
+Use `.fit-narrow` (55 % text width) for portrait or square figures and
+`.fit-narrow .fit-narrow-tight` (44 %) for wide landscape figures where the
+content reaches further left. Place the figure with `.absolute` — e.g.
+`top=-150 right=-100 height="1000"` for portrait or
+`top=130 right=-100 width="950"` for landscape — so it bleeds past the slide
+margins. Put bullets in a `.fit-results` div; strong-tagged keywords pick up
+the `--imr-blue` colour automatically. Avoid wrapping `.fit-results` in a
+`.columns` grid: the `.absolute` figure floats independently of flow, so no
+container is needed on the text side.
 :::
 
 ## Swap two figures in the same spot {data-section="Style sampler"}
@@ -534,7 +517,13 @@ Ask for the discussion, decision, or follow-up you need.
 :::
 ::::
 
+::: {.fragment .fade-in .closing-inline}
+Thank you — questions and discussion
+:::
+
 ::: {.notes}
 Do not end on a generic thank-you slide. End on the message the audience should
-remember.
+remember. The `.closing-inline` fragment fades in on the presenter's last click,
+so the conclusions boxes are the resting state and the sign-off appears only
+when the presenter is ready to invite questions.
 :::
