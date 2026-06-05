@@ -112,6 +112,27 @@ presentation_theme <- function(base_size = 18) {
     )
 }
 
+# Register a bundled hand-drawn font (default: assets/fonts/xkcd-script.ttf) for
+# systemfonts-aware devices and return the family name to pass to
+# ggplot2::geom_text(family = ...). Self-contained — needs no system font
+# install. IMPORTANT: the registration is only honoured by a systemfonts-aware
+# device (ragg), so draw any figure that uses the font with ragg
+# (`device = ragg::agg_png` in ggsave, or `#| dev: ragg_png` for an inline
+# chunk). The default `png` (quartz) device ignores it. Degrades gracefully to
+# the family name if `systemfonts` is unavailable.
+register_xkcd_font <- function(ttf = "assets/fonts/xkcd-script.ttf",
+                               family = "xkcd Script") {
+  if (!requireNamespace("systemfonts", quietly = TRUE)) {
+    return(family)
+  }
+  already <- family %in% systemfonts::registry_fonts()$family ||
+    family %in% systemfonts::system_fonts()$family
+  if (!already && file.exists(ttf)) {
+    systemfonts::register_font(name = family, plain = ttf)
+  }
+  family
+}
+
 extract_spict_context <- function(summary) {
   if (is.null(summary)) {
     return(NULL)

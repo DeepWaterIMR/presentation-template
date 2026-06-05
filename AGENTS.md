@@ -45,6 +45,21 @@ or extracted tables that could drive the presentation.
   "text column beside a large figure" sampler slide in `presentation.qmd`.
 - Reserve freehand absolute positioning (arbitrary offsets unrelated to the
   column pattern) for genuine hero images or small decorative accents.
+- For a wide, edge-to-edge decorative graphic behind a content slide's text, use
+  a slide `background-image` (e.g.
+  `## Title {background-image="assets/x.png" background-size="contain" background-position="bottom"}`)
+  rather than an `.absolute` chunk — it always sits behind the text and spans the
+  full width. Make the figure full-bleed (`scale_x_continuous(expand = expansion(0))`,
+  zero side/bottom `plot.margin`) and inset any edge labels so they are not
+  clipped. Suppress the `data-section` watermark on that slide so the grey label
+  does not land on the graphic
+  (`section.slide[data-section="Name"]::after { content: none; }`).
+- Hand-drawn / custom fonts: bundle the `.ttf` under `assets/fonts/`, register it
+  with `register_xkcd_font()` (systemfonts), and render the figure with the
+  **ragg** device (`device = ragg::agg_png` in `ggsave`, or `#| dev: ragg_png`
+  for an inline chunk). The default `png`/quartz device ignores the registration.
+  This is self-contained — no system font install. The `.ttf` is the one binary
+  asset that must stay versioned (it cannot be regenerated like the PNGs).
 - Use fragments to pace an argument: `.fragment` to reveal bullets in turn, and
   a `.r-stack` with paired `.fade-out` / `.fade-in` (or `.fade-in-then-out`) to
   swap figures in place. Keep the static slide legible if fragments are skipped.
@@ -103,6 +118,12 @@ or extracted tables that could drive the presentation.
   review when an integrated browser/viewer is not available. The script should
   use a background QA browser with an isolated temporary profile, not the user's
   interactive browser.
+- `capture_slides.R` **silently skips slides that use `background-image`**: its
+  slide-detection regex expects `id"…" class=`, but Reveal injects
+  `data-background-*` attributes between them, so such slides (and any title
+  slide with a background image) are dropped without an error — the run just ends
+  short. Screenshot those manually with headless Chrome pointed at the slide hash
+  (`…/<output>.html#/<slide-id>`).
 - Do not read a large generated HTML presentation as text to infer appearance.
 - Check for overflow, tiny labels, inconsistent spacing, crowded tables, and
   slides without a clear visual hierarchy.

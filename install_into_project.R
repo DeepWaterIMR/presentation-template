@@ -131,7 +131,8 @@ deck_files <- c(
   "capture_slides.R",
   file.path("R", "presentation_helpers.R"),
   file.path("assets", "theme.scss"),
-  file.path("assets", "HI_logo_farger_engelsk.png")
+  file.path("assets", "HI_logo_farger_engelsk.png"),
+  file.path("assets", "fonts", "xkcd-script.ttf")
 )
 
 root_files <- c(
