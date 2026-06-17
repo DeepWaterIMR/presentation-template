@@ -88,7 +88,9 @@ scaffold.
    ```
 
    The ordinary working HTML is written beside `presentation.qmd` as a
-   self-contained file.
+   self-contained file. The render script anchors itself to its own location,
+   so it can also be run by path or sourced from another working directory when
+   an external workflow cannot set `wd` to the presentation folder first.
 
 7. Capture QA screenshots and a contact sheet:
 
@@ -124,7 +126,9 @@ data/model_output/spict_summaries/sum_beaked_redfish_spict_2026.rds
 
 This template consumes that stable result boundary. The example config is
 [`examples/reb-spict/presentation.yml`](examples/reb-spict/presentation.yml).
-Render it from this repository by passing the local SPiCT project root:
+Render it from this repository by passing the local SPiCT project root. The
+script changes to its own folder before reading relative template files, so the
+same command also works when called by path from another working directory:
 
 ```bash
 /usr/local/bin/Rscript render_presentation.R \

@@ -92,7 +92,9 @@ Render with:
 This writes the ordinary working HTML beside `presentation.qmd` as a
 self-contained file that can be shared directly. Render through this script so
 the browser tab title is derived from `presentation.yml` `render.output_file`
-without the `.html` extension.
+without the `.html` extension. The script sets its working directory to its own
+folder at startup, so it can also be run by path or sourced from another
+working directory.
 
 Capture screenshots and a contact sheet:
 

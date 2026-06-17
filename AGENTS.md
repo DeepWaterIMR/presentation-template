@@ -139,7 +139,9 @@ or extracted tables that could drive the presentation.
 - Render the ordinary working HTML beside `presentation.qmd` as a self-contained
   single file with `embed-resources: true`.
 - Render through `render_presentation.R` so the browser tab title is set from
-  `render.output_file` without the `.html` extension.
+  `render.output_file` without the `.html` extension. The script anchors itself
+  to its own folder, so external workflows may call it by path or source it
+  without first changing `wd` to the presentation folder.
 
 ## Installation lessons
 

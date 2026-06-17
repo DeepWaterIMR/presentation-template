@@ -167,7 +167,11 @@ message("Next steps:")
 message("  1. Familiarize yourself with the analysis project.")
 message("  2. Discuss the presentation, including the HTML output filename, and update ", presentation_dir, "/slide-plan.md.")
 message("  3. Show the slide plan to the user and wait for approval.")
-message("  4. Render from ", presentation_dir, "/:")
+message(
+  "  4. Render from ",
+  presentation_dir,
+  "/, or call render_presentation.R by path from another working directory:"
+)
 message("     /usr/local/bin/Rscript render_presentation.R --project-root ", target)
 message("  5. Capture QA screenshots from ", presentation_dir, "/:")
 message("     /usr/local/bin/Rscript capture_slides.R")

@@ -8,6 +8,24 @@
 #     --project-root /path/to/reb-spict \
 #     --output-file reb-spict-example.html
 
+this_file <- function() {
+  cmd_args <- commandArgs(trailingOnly = FALSE)
+  file_arg <- sub("^--file=", "", grep("^--file=", cmd_args, value = TRUE))
+  if (length(file_arg)) {
+    return(file_arg[[1]])
+  }
+  for (frame in rev(sys.frames())) {
+    if (!is.null(frame$ofile)) {
+      return(frame$ofile)
+    }
+  }
+  NULL
+}
+
+original_wd <- getwd()
+on.exit(setwd(original_wd), add = TRUE)
+setwd(dirname(normalizePath(this_file())))
+
 args <- commandArgs(trailingOnly = TRUE)
 
 arg_value <- function(flag, default = NULL) {
