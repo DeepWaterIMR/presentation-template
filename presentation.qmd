@@ -511,6 +511,46 @@ labels deliberately avoid the `fig-` prefix so Quarto does not add a "Figure 1"
 caption.
 :::
 
+## Recreate a concept diagram in HTML/CSS {data-section="Style sampler"}
+
+:::: {.text-figure}
+::: {.text-panel}
+- When a slide needs a simple "central thing surrounded by contributing
+  pieces" diagram, **redraw it in HTML/CSS** rather than embedding a bitmap.
+- It stays vector-crisp at any size, picks up the deck's fonts and `--imr-*`
+  colours, and is trivial to relabel.
+
+::: {.takeaway}
+Reach for `.concept-hub` for a hub-and-spoke; reuse `.grid-3` + `.card` for a
+flat labelled grid. Keep bitmaps for photos and genuine external figures.
+:::
+:::
+
+::: {.figure-panel}
+<div class="concept-diagram">
+<div class="concept-equals">System =</div>
+<div class="concept-box">
+<span class="concept-box-label">Boundary</span>
+<div class="concept-hub-grid">
+<div class="concept-sat pos-top">Input A</div>
+<div class="concept-sat pos-left">Input B</div>
+<div class="concept-hub">Core</div>
+<div class="concept-sat pos-right">Input C</div>
+<div class="concept-sat pos-bottom">Input D</div>
+</div>
+</div>
+</div>
+:::
+::::
+
+::: {.notes}
+The centre sits in the middle of a 3x3 grid; add only the satellite cells you
+need (`pos-top`, `pos-right`, `pos-br`, `pos-bottom`, `pos-bl`, `pos-left`,
+`pos-tl`, `pos-tr`). Good for an assessment model and its data inputs, a stock
+and its sources, or any agent/harness-style anatomy. This is hand-built markup,
+not a generated figure — edit the divs directly.
+:::
+
 ## Tables can share a slide with a compact figure {data-section="Style sampler"}
 
 ```{r}

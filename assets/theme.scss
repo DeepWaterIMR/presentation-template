@@ -440,3 +440,94 @@ $presentation-font-size-root: 30px;
   margin-top: 1.6rem;
   text-align: center;
 }
+
+/* Hand-built concept diagram (hub-and-spoke). Recreate a simple "central thing
+   surrounded by contributing pieces" figure as HTML/CSS in the deck's own
+   palette instead of embedding a bitmap screenshot — it stays vector-crisp,
+   matches the deck fonts/colours, and is trivial to relabel. The centre sits in
+   the middle of a 3x3 grid; fill any of the 8 surrounding cells. Use for an
+   assessment model and its inputs, a stock and its data sources, etc. See the
+   "Recreate a concept diagram in HTML/CSS" sampler slide. For a flat labelled
+   grid instead of a hub, reuse `.grid-2`/`.grid-3` with `.card`s. */
+.concept-diagram {
+  align-items: center;
+  display: flex;
+  gap: 1rem;
+  height: 100%;
+  justify-content: center;
+}
+
+.concept-equals {
+  color: var(--imr-ink);
+  flex: 0 0 auto;
+  font-size: 1.3em;
+  font-weight: 750;
+}
+
+.concept-box {
+  border: 2px dashed var(--imr-muted);
+  border-radius: 16px;
+  padding: 1.9rem 1.1rem 1.1rem;
+  position: relative;
+}
+
+.concept-box-label {
+  background: var(--imr-paper);
+  color: var(--imr-ink);
+  font-size: 1.05em;
+  font-weight: 750;
+  left: 1rem;
+  padding: 0 0.5rem;
+  position: absolute;
+  top: -0.85em;
+}
+
+.concept-hub-grid {
+  display: grid;
+  gap: 0.55rem;
+  grid-template-areas:
+    "tl   top    tr   "
+    "left hub   right"
+    "bl   bottom br   ";
+  grid-template-columns: repeat(3, 148px);
+  grid-template-rows: repeat(3, 92px);
+}
+
+.concept-hub {
+  align-items: center;
+  background: var(--imr-coral);
+  border-radius: 50%;
+  color: #ffffff;
+  display: flex;
+  font-size: 1.05em;
+  font-weight: 750;
+  grid-area: hub;
+  justify-content: center;
+  text-align: center;
+}
+
+.concept-sat {
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid var(--imr-line);
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(23, 48, 66, 0.06);
+  color: var(--imr-ink);
+  display: flex;
+  font-size: 0.76em;
+  font-weight: 700;
+  justify-content: center;
+  padding: 0.35rem;
+  text-align: center;
+}
+
+/* Position satellites: top / right / bottom-right / bottom / bottom-left /
+   left / top-left / top-right. Add only the cells the diagram needs. */
+.concept-sat.pos-top { grid-area: top; }
+.concept-sat.pos-right { grid-area: right; }
+.concept-sat.pos-br { grid-area: br; }
+.concept-sat.pos-bottom { grid-area: bottom; }
+.concept-sat.pos-bl { grid-area: bl; }
+.concept-sat.pos-left { grid-area: left; }
+.concept-sat.pos-tl { grid-area: tl; }
+.concept-sat.pos-tr { grid-area: tr; }

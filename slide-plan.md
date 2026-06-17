@@ -67,3 +67,15 @@ project details.
   `.fade-in`) is an effective way to pace an argument. With transparent figure
   backgrounds the earlier figure bleeds through the next unless it fades out. See
   the "Pace a multi-figure argument" sampler slide.
+- Hand-built concept diagrams: when a reference figure is just a central thing
+  surrounded by labelled pieces, recreate it as HTML/CSS in the deck palette
+  (`.concept-hub` hub-and-spoke, or `.grid-3` + `.card`) instead of embedding a
+  screenshot — vector-crisp, on-brand, easy to relabel, and no binary asset to
+  carry. See the "Recreate a concept diagram in HTML/CSS" sampler slide.
+- Figure reuse: if one figure shows up on two slides, make it a helper in `R/`
+  and call it from both chunks; editing the helper updates every slide.
+- First non-assessment use: this template also drives the IMR "KI-kaffe" AI talk
+  series (a Claude Code talk was the first). Decks with no SPiCT object render
+  fine with `data.adapter: "none"` and no `summary_file`. Keep generalizable
+  layout/figure lessons flowing back here, since the template now serves both
+  stock-assessment and general-topic decks.

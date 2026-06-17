@@ -77,6 +77,12 @@ or extracted tables that could drive the presentation.
   figures use transparent backgrounds, an earlier figure shows through the next
   one unless it clears itself — so every step except the last must fade out. See
   the "Pace a multi-figure argument" sampler slide.
+- For a simple "central thing surrounded by contributing pieces" concept
+  diagram, hand-build it in HTML/CSS (`.concept-hub` hub-and-spoke, or
+  `.grid-3` + `.card` for a flat labelled grid) rather than embedding a bitmap
+  screenshot — it stays vector-crisp, matches the deck fonts/colours, and is
+  trivial to relabel. Reserve embedded images for photos and genuine external
+  figures. See the "Recreate a concept diagram in HTML/CSS" sampler slide.
 - On a wide (~21:9) canvas, scale figure `base_size` and linewidths up so labels
   and lines do not look thin.
 - For the `ref-index` style, constrain the slide title width and place a
@@ -91,6 +97,10 @@ or extracted tables that could drive the presentation.
   `fig-` and `tbl-` chunk labels and do not add placeholder captions, so the
   rendered deck does not show "Figure 1" or "Table 1" headers.
 - Keep analysis logic in the analysis project or in small helper functions.
+- When the same figure appears on more than one slide, extract it into a helper
+  in `R/` and call it from each chunk rather than duplicating the plotting code
+  (same pattern as `plot_spict_trajectories()`). One edit then updates every
+  slide that uses it.
 
 ## Data rules
 
