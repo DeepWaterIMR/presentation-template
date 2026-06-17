@@ -39,6 +39,13 @@ or extracted tables that could drive the presentation.
   figure on the right.
 - Add `data-section="Section name"` to ordinary slide headers when the deck
   benefits from a quiet grey section label at the bottom of each slide.
+- Slides are top-aligned by default (`center: false`), which pins that grey
+  data-section watermark to the slide bottom edge. For content-light / card
+  decks that leave a lot of empty space below the content, set `center: true` in
+  the `presentation.qmd` YAML to balance slides vertically and use the whole
+  slide height. Two interactions: the watermark then sits just under the centred
+  content instead of the edge, and `.absolute` bleed-figure slides / `.fit-narrow`
+  assume top-aligned slides, so re-render and re-check those after flipping it.
 - For figure-heavy science slides, pair RevealJS `.columns` with an `.absolute`
   figure in the wide column when one chart or map must dominate and a balanced
   grid would crowd it. This is a supported pattern, not a last resort; see the
@@ -63,6 +70,13 @@ or extracted tables that could drive the presentation.
 - Use fragments to pace an argument: `.fragment` to reveal bullets in turn, and
   a `.r-stack` with paired `.fade-out` / `.fade-in` (or `.fade-in-then-out`) to
   swap figures in place. Keep the static slide legible if fragments are skipped.
+- For a text-left / figure-right walkthrough, put the bullets in one `.column`
+  and an `.r-stack` of figures in the other, and sync each bullet to its figure
+  with a shared `fragment-index`. In the stack the first figure is `.fade-out`,
+  middle figures `.fade-in-then-out`, and the last `.fade-in`. Because template
+  figures use transparent backgrounds, an earlier figure shows through the next
+  one unless it clears itself — so every step except the last must fade out. See
+  the "Pace a multi-figure argument" sampler slide.
 - On a wide (~21:9) canvas, scale figure `base_size` and linewidths up so labels
   and lines do not look thin.
 - For the `ref-index` style, constrain the slide title width and place a

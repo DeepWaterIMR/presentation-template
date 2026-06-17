@@ -10,6 +10,15 @@ format:
     # often read better on a wider canvas. To use ~21:9, set:
     #   width: 2100
     # and scale figure base_size / linewidths up to match (see the setup chunk).
+    #
+    # center: false keeps content top-aligned and pins the grey data-section
+    # watermark to the slide bottom edge. For content-light / card decks that
+    # leave a lot of empty space below the content, set `center: true` to balance
+    # each slide vertically (it uses the whole slide height instead of clustering
+    # at the top). Two interactions to know before flipping it: (1) the
+    # data-section watermark then sits just beneath the centred content rather
+    # than the slide edge, and (2) `.absolute` bleed-figure slides and
+    # `.fit-narrow` assume top-aligned slides, so re-render and re-check those.
     center: false
     slide-number: c/t
     hash: true
@@ -426,6 +435,80 @@ two species, scenarios, or model variants without moving the audience's eye.
 Both panels here draw the same placeholder; in a real deck the two chunks would
 plot different objects. Use `.fade-in-then-out` for the middle steps of a longer
 sequence so each figure appears, then clears for the next.
+:::
+
+## Pace a multi-figure argument {data-section="Style sampler"}
+
+:::: {.columns}
+
+::: {.column width="40%"}
+Reveal one figure per click while the bullet beside it says what to look for —
+the text accumulates on the left, the figure swaps on the right.
+
+**First** — establish the baseline.
+
+::: {.fragment fragment-index=1}
+**Then** — the comparison fades in over it.
+:::
+
+::: {.fragment fragment-index=2}
+**Finally** — land the figure you want left on screen.
+:::
+:::
+
+::: {.column width="60%"}
+::: {.r-stack}
+
+::: {.fragment .fade-out fragment-index=1}
+```{r}
+#| label: plot-seq-a
+#| fig-width: 8.4
+#| fig-height: 5.4
+#| out-width: 100%
+plot_spict_trajectories(spict)
+```
+:::
+
+::: {.fragment fragment-index=1 .fade-in-then-out}
+```{r}
+#| label: plot-seq-b
+#| fig-width: 8.4
+#| fig-height: 5.4
+#| out-width: 100%
+plot_spict_trajectories(spict)
+```
+:::
+
+::: {.fragment fragment-index=2 .fade-in}
+```{r}
+#| label: plot-seq-c
+#| fig-width: 8.4
+#| fig-height: 5.4
+#| out-width: 100%
+plot_spict_trajectories(spict)
+```
+:::
+
+:::
+:::
+
+::::
+
+::: {.small-note}
+Sync each left-column `.fragment` and its figure on the same `fragment-index`.
+In the `.r-stack`, the first figure is `.fade-out`, middle figures
+`.fade-in-then-out`, and the last `.fade-in`. With transparent figure
+backgrounds an earlier figure shows through later ones unless it clears itself,
+so every step except the last must fade out.
+:::
+
+::: {.notes}
+All three chunks draw the same placeholder; in a real deck they would plot
+different objects (for example capability, then cost, then an effort trade-off).
+This is the pattern behind a text-left / figure-right walkthrough. Keep the base
+figure legible on its own in case the presenter skips the fragments. Chunk
+labels deliberately avoid the `fig-` prefix so Quarto does not add a "Figure 1"
+caption.
 :::
 
 ## Tables can share a slide with a compact figure {data-section="Style sampler"}

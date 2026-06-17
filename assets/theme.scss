@@ -29,6 +29,10 @@ $presentation-font-size-root: 30px;
   padding: 44px 58px;
 }
 
+/* Quiet grey section watermark. Pinned to the slide bottom edge with
+   center: false (the section fills the slide height). With center: true the
+   section box hugs its content, so this label instead sits just beneath the
+   centred content block — consistent across slides, but no longer at the edge. */
 .reveal .slides section.slide[data-section]::after {
   bottom: 18px;
   color: #9aa7ab;

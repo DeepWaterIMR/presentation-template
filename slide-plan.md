@@ -54,3 +54,16 @@ installer problems, missing input boundaries, ignored required files, rendering
 quirks, and visual QA findings. Keep these notes generic enough that they can
 be copied back into the template without exposing local paths or sensitive
 project details.
+
+- Verticality: content-light / card decks often leave a wide empty band below
+  the content with the default `center: false`. Setting `center: true` balances
+  each slide and reads much better. Caveats: the grey data-section watermark then
+  sits just under the centred content rather than the slide edge, and `.absolute`
+  bleed-figure slides / `.fit-narrow` assume top-aligned slides — re-render and
+  check those after flipping it.
+- Multi-figure walkthrough: a text-left / figure-right slide that reveals one
+  figure per click (sync each `.fragment` bullet and its figure on a shared
+  `fragment-index`, first figure `.fade-out`, middle `.fade-in-then-out`, last
+  `.fade-in`) is an effective way to pace an argument. With transparent figure
+  backgrounds the earlier figure bleeds through the next unless it fades out. See
+  the "Pace a multi-figure argument" sampler slide.
