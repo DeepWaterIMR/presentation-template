@@ -116,34 +116,6 @@ inspect its screenshots and contact sheet. The capture script is designed for a
 background Chromium-compatible QA browser with an isolated temporary profile; it
 does not auto-select the user's installed Chrome or Brave app.
 
-## SPiCT example
-
-The beaked-redfish SPiCT project already writes a compact summary object:
-
-```text
-data/model_output/spict_summaries/sum_beaked_redfish_spict_2026.rds
-```
-
-This template consumes that stable result boundary. The example config is
-[`examples/reb-spict/presentation.yml`](examples/reb-spict/presentation.yml).
-Render it from this repository by passing the local SPiCT project root. The
-script changes to its own folder before reading relative template files, so the
-same command also works when called by path from another working directory:
-
-```bash
-/usr/local/bin/Rscript render_presentation.R \
-  --config examples/reb-spict/presentation.yml \
-  --project-root "/path/to/reb-spict"
-```
-
-The example config writes its working preview under
-`examples/reb-spict/preview/`, keeping its generated assets separate from the
-generic template preview.
-
-The same pattern should be copied into `spict-template`: create a presentation
-folder, point its config at the current annual summary RDS, and render the deck
-after `run_assessment()`.
-
 ## Projects without one compact result object
 
 Some assessment projects do not yet expose a single presentation summary object.

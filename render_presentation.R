@@ -3,10 +3,8 @@
 #
 # Examples:
 #   Rscript render_presentation.R
-#   Rscript render_presentation.R \
-#     --config examples/reb-spict/presentation.yml \
-#     --project-root /path/to/reb-spict \
-#     --output-file reb-spict-example.html
+#   Rscript render_presentation.R --project-root /path/to/analysis-project
+#   Rscript render_presentation.R --output-file assessment-presentation.html
 
 this_file <- function() {
   cmd_args <- commandArgs(trailingOnly = FALSE)
