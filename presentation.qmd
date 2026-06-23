@@ -89,8 +89,7 @@ spict <- if (identical(cfg$data$adapter, "spict")) {
 :::
 
 ::: {.notes}
-Open with the purpose of the presentation in one sentence. State whether the
-audience is being asked to decide, discuss, or simply understand something.
+Open with the purpose of the presentation in one sentence. State whether the audience is being asked to decide, discuss, or simply understand something.
 :::
 
 ## Start with the story {data-section="Introduction"}
@@ -126,9 +125,7 @@ What should the audience remember when the slide is gone?
 ::::
 
 ::: {.notes}
-Replace this starter slide after agreeing on the narrative spine. A strong deck
-reveals the structure early, especially when the later slides contain technical
-detail.
+Replace this starter slide after agreeing on the narrative spine. A strong deck reveals the structure early, especially when the later slides contain technical detail.
 :::
 
 ## Results update when the source project reruns {data-section="Workflow"}
@@ -168,8 +165,7 @@ Rerender HTML for presenting and PDF for review or archiving.
 ::::
 
 ::: {.notes}
-For SPiCT projects, the input is the annual `sum_<stock>_spict_<year>.rds`
-summary object written by the assessment workflow.
+For SPiCT projects, the input is the annual `sum_<stock>_spict_<year>.rds` summary object written by the assessment workflow.
 :::
 
 ## Current model status {data-section="Results"}
@@ -217,8 +213,7 @@ Replace this sentence with the finding that matters to the audience.
 :::
 
 ::: {.notes}
-This slide demonstrates a repeatable metric-card layout. Keep the metrics only
-when they support the main claim.
+This slide demonstrates a repeatable metric-card layout. Keep the metrics only when they support the main claim.
 :::
 
 ## Trajectories should carry the argument {data-section="Results"}
@@ -245,9 +240,7 @@ plot_spict_trajectories(spict)
 ::::
 
 ::: {.notes}
-Charts should be generated from the compact result object. Use the analysis
-project for complex plotting functions and call those functions here when
-possible.
+Charts should be generated from the compact result object. Use the analysis project for complex plotting functions and call those functions here when possible.
 :::
 
 ## Choose a layout by proof object {data-section="Style sampler"}
@@ -283,9 +276,7 @@ Pick the layout from the evidence type first, then write the slide claim.
 :::
 
 ::: {.notes}
-This sampler slide is meant to make the reusable classes visible in the
-starter deck. Delete it from project decks after selecting the relevant
-patterns.
+This sampler slide is meant to make the reusable classes visible in the starter deck. Delete it from project decks after selecting the relevant patterns.
 :::
 
 ## Diagnostic cards keep technical checks legible {data-section="Style sampler"}
@@ -315,20 +306,17 @@ Show whether derived quantities change when data, years, or assumptions move.
 ::::
 
 ::: {.small-note}
-Use `.diagnostic-grid` for a short map of checks before showing dense
-diagnostic figures.
+Use `.diagnostic-grid` for a short map of checks before showing dense diagnostic figures.
 :::
 
 ::: {.notes}
-This style works well before residual, retrospective, sensitivity, or
-comparison plots.
+This style works well before residual, retrospective, sensitivity, or comparison plots.
 :::
 
 ## Emphasis styles separate caveats from conclusions {data-section="Style sampler"}
 
 ::: {.alert-box}
-Use `.alert-box` for a caveat, risk, or modelling limitation that should not be
-missed.
+Use `.alert-box` for a caveat, risk, or modelling limitation that should not be missed.
 :::
 
 :::: {.takeaway-grid}
@@ -366,8 +354,7 @@ Use `.closing` for a short final line.
 :::
 
 ::: {.notes}
-Use emphasis styles sparingly. They are strongest when the rest of the slide is
-quiet.
+Use emphasis styles sparingly. They are strongest when the rest of the slide is quiet.
 :::
 
 ## A wrapped title can sit beside a full-height figure {.fit-narrow data-section="Style sampler"}
@@ -375,8 +362,7 @@ quiet.
 ::: {.fit-results}
 - Put the interpretation in a narrow column on the left.
 - Keep bullets brief — the figure is the proof object.
-- Subscript reference points with Pandoc inline notation, e.g. B~MSY~ and
-  F~MSY~, so they render correctly in both HTML and PDF.
+- Subscript reference points with Pandoc inline notation, e.g. B~MSY~ and F~MSY~, so they render correctly in both HTML and PDF.
 
 ::: {.fragment}
 - A `.fragment` appears on the next click.
@@ -388,15 +374,7 @@ quiet.
 ![](assets/HI_logo_farger_engelsk.png){.absolute top=-150 right=-100 height="1000"}
 
 ::: {.notes}
-Use `.fit-narrow` (55 % text width) for portrait or square figures and
-`.fit-narrow .fit-narrow-tight` (44 %) for wide landscape figures where the
-content reaches further left. Place the figure with `.absolute` — e.g.
-`top=-150 right=-100 height="1000"` for portrait or
-`top=130 right=-100 width="950"` for landscape — so it bleeds past the slide
-margins. Put bullets in a `.fit-results` div; strong-tagged keywords pick up
-the `--imr-blue` colour automatically. Avoid wrapping `.fit-results` in a
-`.columns` grid: the `.absolute` figure floats independently of flow, so no
-container is needed on the text side.
+Use `.fit-narrow` (55 % text width) for portrait or square figures and `.fit-narrow .fit-narrow-tight` (44 %) for wide landscape figures where the content reaches further left. Place the figure with `.absolute` — e.g. `top=-150 right=-100 height="1000"` for portrait or `top=130 right=-100 width="950"` for landscape — so it bleeds past the slide margins. Put bullets in a `.fit-results` div; strong-tagged keywords pick up the `--imr-blue` colour automatically. Avoid wrapping `.fit-results` in a `.columns` grid: the `.absolute` figure floats independently of flow, so no container is needed on the text side.
 :::
 
 ## Swap two figures in the same spot {data-section="Style sampler"}
@@ -426,15 +404,11 @@ plot_spict_trajectories(spict)
 :::
 
 ::: {.small-note}
-Stack figures in a `.r-stack` and pair `.fade-out` / `.fade-in` on the same
-`fragment-index` to swap one figure for another in place — useful for comparing
-two species, scenarios, or model variants without moving the audience's eye.
+Stack figures in a `.r-stack` and pair `.fade-out` / `.fade-in` on the same `fragment-index` to swap one figure for another in place — useful for comparing two species, scenarios, or model variants without moving the audience's eye.
 :::
 
 ::: {.notes}
-Both panels here draw the same placeholder; in a real deck the two chunks would
-plot different objects. Use `.fade-in-then-out` for the middle steps of a longer
-sequence so each figure appears, then clears for the next.
+Both panels here draw the same placeholder; in a real deck the two chunks would plot different objects. Use `.fade-in-then-out` for the middle steps of a longer sequence so each figure appears, then clears for the next.
 :::
 
 ## Pace a multi-figure argument {data-section="Style sampler"}
@@ -442,8 +416,7 @@ sequence so each figure appears, then clears for the next.
 :::: {.columns}
 
 ::: {.column width="40%"}
-Reveal one figure per click while the bullet beside it says what to look for —
-the text accumulates on the left, the figure swaps on the right.
+Reveal one figure per click while the bullet beside it says what to look for — the text accumulates on the left, the figure swaps on the right.
 
 **First** — establish the baseline.
 
@@ -495,34 +468,22 @@ plot_spict_trajectories(spict)
 ::::
 
 ::: {.small-note}
-Sync each left-column `.fragment` and its figure on the same `fragment-index`.
-In the `.r-stack`, the first figure is `.fade-out`, middle figures
-`.fade-in-then-out`, and the last `.fade-in`. With transparent figure
-backgrounds an earlier figure shows through later ones unless it clears itself,
-so every step except the last must fade out.
+Sync each left-column `.fragment` and its figure on the same `fragment-index`. In the `.r-stack`, the first figure is `.fade-out`, middle figures `.fade-in-then-out`, and the last `.fade-in`. With transparent figure backgrounds an earlier figure shows through later ones unless it clears itself, so every step except the last must fade out.
 :::
 
 ::: {.notes}
-All three chunks draw the same placeholder; in a real deck they would plot
-different objects (for example capability, then cost, then an effort trade-off).
-This is the pattern behind a text-left / figure-right walkthrough. Keep the base
-figure legible on its own in case the presenter skips the fragments. Chunk
-labels deliberately avoid the `fig-` prefix so Quarto does not add a "Figure 1"
-caption.
+All three chunks draw the same placeholder; in a real deck they would plot different objects (for example capability, then cost, then an effort trade-off). This is the pattern behind a text-left / figure-right walkthrough. Keep the base figure legible on its own in case the presenter skips the fragments. Chunk labels deliberately avoid the `fig-` prefix so Quarto does not add a "Figure 1" caption.
 :::
 
 ## Recreate a concept diagram in HTML/CSS {data-section="Style sampler"}
 
 :::: {.text-figure}
 ::: {.text-panel}
-- When a slide needs a simple "central thing surrounded by contributing
-  pieces" diagram, **redraw it in HTML/CSS** rather than embedding a bitmap.
-- It stays vector-crisp at any size, picks up the deck's fonts and `--imr-*`
-  colours, and is trivial to relabel.
+- When a slide needs a simple "central thing surrounded by contributing pieces" diagram, **redraw it in HTML/CSS** rather than embedding a bitmap.
+- It stays vector-crisp at any size, picks up the deck's fonts and `--imr-*` colours, and is trivial to relabel.
 
 ::: {.takeaway}
-Reach for `.concept-hub` for a hub-and-spoke; reuse `.grid-3` + `.card` for a
-flat labelled grid. Keep bitmaps for photos and genuine external figures.
+Reach for `.concept-hub` for a hub-and-spoke; reuse `.grid-3` + `.card` for a flat labelled grid. Keep bitmaps for photos and genuine external figures.
 :::
 :::
 
@@ -544,11 +505,7 @@ flat labelled grid. Keep bitmaps for photos and genuine external figures.
 ::::
 
 ::: {.notes}
-The centre sits in the middle of a 3x3 grid; add only the satellite cells you
-need (`pos-top`, `pos-right`, `pos-br`, `pos-bottom`, `pos-bl`, `pos-left`,
-`pos-tl`, `pos-tr`). Good for an assessment model and its data inputs, a stock
-and its sources, or any agent/harness-style anatomy. This is hand-built markup,
-not a generated figure — edit the divs directly.
+The centre sits in the middle of a 3x3 grid; add only the satellite cells you need (`pos-top`, `pos-right`, `pos-br`, `pos-bottom`, `pos-bl`, `pos-left`, `pos-tl`, `pos-tr`). Good for an assessment model and its data inputs, a stock and its sources, or any agent/harness-style anatomy. This is hand-built markup, not a generated figure — edit the divs directly.
 :::
 
 ## Tables can share a slide with a compact figure {data-section="Style sampler"}
@@ -589,8 +546,7 @@ par(old_par)
 :::
 
 ::: {.notes}
-Use `.scenario-figure` when a narrow table needs a small visual check beneath
-it. Keep the figure compact so the table remains readable.
+Use `.scenario-figure` when a narrow table needs a small visual check beneath it. Keep the figure compact so the table remains readable.
 :::
 
 ## Compare scenarios in one table {data-section="Results"}
@@ -608,8 +564,7 @@ State the decision-facing comparison in one sentence.
 :::
 
 ::: {.notes}
-Keep tables narrow enough to read from the back of the room. Put the full
-scenario table in an appendix if more columns are needed.
+Keep tables narrow enough to read from the back of the room. Put the full scenario table in an appendix if more columns are needed.
 :::
 
 ## End with what should stick {data-section="Close"}
@@ -645,8 +600,5 @@ Thank you — questions and discussion
 :::
 
 ::: {.notes}
-Do not end on a generic thank-you slide. End on the message the audience should
-remember. The `.closing-inline` fragment fades in on the presenter's last click,
-so the conclusions boxes are the resting state and the sign-off appears only
-when the presenter is ready to invite questions.
+Do not end on a generic thank-you slide. End on the message the audience should remember. The `.closing-inline` fragment fades in on the presenter's last click, so the conclusions boxes are the resting state and the sign-off appears only when the presenter is ready to invite questions.
 :::

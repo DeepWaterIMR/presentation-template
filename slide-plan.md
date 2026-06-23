@@ -1,14 +1,10 @@
 # Slide plan
 
-Agree on this overview before expanding `presentation.qmd`. Add, remove, and
-reorder slides freely. Keep one row per slide. Keep the plan free of local
-absolute paths, credentials, and unpublished personal details. Do not build or
-render a new deck until the user has explicitly approved the proposed overview.
+Agree on this overview before expanding `presentation.qmd`. Add, remove, and reorder slides freely. Keep one row per slide. Keep the plan free of local absolute paths, credentials, and unpublished personal details. Do not build or render a new deck until the user has explicitly approved the proposed overview.
 
 ## Claim Spine
 
-Write the one-sentence story before building slides. The story should say what
-the audience should understand, discuss, or decide.
+Write the one-sentence story before building slides. The story should say what the audience should understand, discuss, or decide.
 
 ## Main Deck
 
@@ -24,8 +20,7 @@ the audience should understand, discuss, or decide.
 
 ## Reproducible Figure Sources
 
-List every figure, table, or derived value that appears in the deck. Use
-project-relative paths or named workflow outputs, not local absolute paths.
+List every figure, table, or derived value that appears in the deck. Use project-relative paths or named workflow outputs, not local absolute paths.
 
 | Output | Primary source | Refresh step |
 |---|---|---|
@@ -37,45 +32,18 @@ project-relative paths or named workflow outputs, not local absolute paths.
 - Who is the primary audience?
 - How many minutes are available?
 - Is the presentation for information, discussion, or a decision?
-- What should the HTML output file be called? Use `presentation.html` if no
-  preference is given.
+- What should the HTML output file be called? Use `presentation.html` if no preference is given.
 - Which result object should drive the rerender?
-- Does the deck need one compact summary object, or a project-specific adapter
-  that reads several stable model outputs?
-- Are any comparisons needed between model-result folders from different
-  assessment years?
-- Is a manually rearrangeable PowerPoint file required, or is editable Quarto
-  source plus HTML/PDF sufficient?
+- Does the deck need one compact summary object, or a project-specific adapter that reads several stable model outputs?
+- Are any comparisons needed between model-result folders from different assessment years?
+- Is a manually rearrangeable PowerPoint file required, or is editable Quarto source plus HTML/PDF sufficient?
 
 ## Template-test notes
 
-Record workflow issues discovered while using the template, especially
-installer problems, missing input boundaries, ignored required files, rendering
-quirks, and visual QA findings. Keep these notes generic enough that they can
-be copied back into the template without exposing local paths or sensitive
-project details.
+Record workflow issues discovered while using the template, especially installer problems, missing input boundaries, ignored required files, rendering quirks, and visual QA findings. Keep these notes generic enough that they can be copied back into the template without exposing local paths or sensitive project details.
 
-- Verticality: content-light / card decks often leave a wide empty band below
-  the content with the default `center: false`. Setting `center: true` balances
-  each slide and reads much better. Caveats: the grey data-section watermark then
-  sits just under the centred content rather than the slide edge, and `.absolute`
-  bleed-figure slides / `.fit-narrow` assume top-aligned slides — re-render and
-  check those after flipping it.
-- Multi-figure walkthrough: a text-left / figure-right slide that reveals one
-  figure per click (sync each `.fragment` bullet and its figure on a shared
-  `fragment-index`, first figure `.fade-out`, middle `.fade-in-then-out`, last
-  `.fade-in`) is an effective way to pace an argument. With transparent figure
-  backgrounds the earlier figure bleeds through the next unless it fades out. See
-  the "Pace a multi-figure argument" sampler slide.
-- Hand-built concept diagrams: when a reference figure is just a central thing
-  surrounded by labelled pieces, recreate it as HTML/CSS in the deck palette
-  (`.concept-hub` hub-and-spoke, or `.grid-3` + `.card`) instead of embedding a
-  screenshot — vector-crisp, on-brand, easy to relabel, and no binary asset to
-  carry. See the "Recreate a concept diagram in HTML/CSS" sampler slide.
-- Figure reuse: if one figure shows up on two slides, make it a helper in `R/`
-  and call it from both chunks; editing the helper updates every slide.
-- First non-assessment use: this template also drives the IMR "KI-kaffe" AI talk
-  series (a Claude Code talk was the first). Decks with no SPiCT object render
-  fine with `data.adapter: "none"` and no `summary_file`. Keep generalizable
-  layout/figure lessons flowing back here, since the template now serves both
-  stock-assessment and general-topic decks.
+- Verticality: content-light / card decks often leave a wide empty band below the content with the default `center: false`. Setting `center: true` balances each slide and reads much better. Caveats: the grey data-section watermark then sits just under the centred content rather than the slide edge, and `.absolute` bleed-figure slides / `.fit-narrow` assume top-aligned slides — re-render and check those after flipping it.
+- Multi-figure walkthrough: a text-left / figure-right slide that reveals one figure per click (sync each `.fragment` bullet and its figure on a shared `fragment-index`, first figure `.fade-out`, middle `.fade-in-then-out`, last `.fade-in`) is an effective way to pace an argument. With transparent figure backgrounds the earlier figure bleeds through the next unless it fades out. See the "Pace a multi-figure argument" sampler slide.
+- Hand-built concept diagrams: when a reference figure is just a central thing surrounded by labelled pieces, recreate it as HTML/CSS in the deck palette (`.concept-hub` hub-and-spoke, or `.grid-3` + `.card`) instead of embedding a screenshot — vector-crisp, on-brand, easy to relabel, and no binary asset to carry. See the "Recreate a concept diagram in HTML/CSS" sampler slide.
+- Figure reuse: if one figure shows up on two slides, make it a helper in `R/` and call it from both chunks; editing the helper updates every slide.
+- First non-assessment use: this template also drives the IMR "KI-kaffe" AI talk series (a Claude Code talk was the first). Decks with no SPiCT object render fine with `data.adapter: "none"` and no `summary_file`. Keep generalizable layout/figure lessons flowing back here, since the template now serves both stock-assessment and general-topic decks.
