@@ -84,16 +84,29 @@ playwright_browser_candidates <- function() {
 browser_candidates <- c(
   arg_value("--browser"),
   Sys.getenv("PRESENTATION_QA_BROWSER", unset = ""),
-  Sys.which("chromium"),
-  Sys.which("chromium-browser"),
+  playwright_browser_candidates(),
   Sys.which("google-chrome"),
   Sys.which("google-chrome-stable"),
-  playwright_browser_candidates()
+  Sys.which("chromium"),
+  Sys.which("chromium-browser")
 )
-browser_candidates <- browser_candidates[
+browser_candidates <- unique(browser_candidates[
   !is.na(browser_candidates) &
     nzchar(browser_candidates) &
     file.exists(browser_candidates)
+])
+browser_works <- function(candidate) {
+  version_output <- tryCatch(
+    suppressWarnings(
+      system2(candidate, "--version", stdout = TRUE, stderr = TRUE)
+    ),
+    error = function(error) structure(character(), status = 1L)
+  )
+  status <- attr(version_output, "status")
+  is.null(status) || identical(as.integer(status), 0L)
+}
+browser_candidates <- browser_candidates[
+  vapply(browser_candidates, browser_works, logical(1))
 ]
 if (!length(browser_candidates)) {
   stop(
@@ -151,6 +164,10 @@ fragment_state <- arg_value("--fragment-state", "initial")
 if (!fragment_state %in% c("initial", "last")) {
   stop("--fragment-state must be either 'initial' or 'last'.")
 }
+capture_timeout <- suppressWarnings(as.numeric(arg_value("--timeout", "30")))
+if (is.na(capture_timeout) || capture_timeout <= 0) {
+  stop("--timeout must be a positive number of seconds.")
+}
 query <- if (identical(fragment_state, "last")) "?qa-fragments=last" else ""
 html_url <- paste0("file://", URLencode(html_file), query)
 screenshot_files <- character(length(slide_ids))
@@ -164,11 +181,13 @@ for (index in seq_along(slide_ids)) {
   screenshot_files[[index]] <- screenshot_file
   profile_dir <- tempfile("presentation-qa-chrome-")
   dir.create(profile_dir)
+  browser_log <- tempfile("presentation-qa-browser-", fileext = ".log")
 
   chrome_args <- c(
     "--headless",
     "--disable-background-networking",
     "--disable-component-update",
+    "--disable-dev-shm-usage",
     "--disable-gpu",
     "--disable-sync",
     "--hide-scrollbars",
@@ -186,12 +205,12 @@ for (index in seq_along(slide_ids)) {
     system2(
       browser,
       args = vapply(chrome_args, shQuote, character(1)),
-      stdout = FALSE,
-      stderr = FALSE,
+      stdout = browser_log,
+      stderr = browser_log,
       wait = FALSE
     )
   )
-  deadline <- Sys.time() + 15
+  deadline <- Sys.time() + capture_timeout
   while (!file.exists(screenshot_file) && Sys.time() < deadline) {
     Sys.sleep(0.2)
   }
@@ -208,8 +227,16 @@ for (index in seq_along(slide_ids)) {
   }
   unlink(profile_dir, recursive = TRUE)
   if (!file.exists(screenshot_file)) {
-    stop("Browser did not create ", screenshot_file, " within 15 seconds.")
+    browser_output <- paste(readLines(browser_log, warn = FALSE), collapse = "\n")
+    if (!nzchar(browser_output)) {
+      browser_output <- "No browser diagnostics were written."
+    }
+    stop(
+      "Browser did not create ", screenshot_file, " within ",
+      capture_timeout, " seconds. Browser output:\n", browser_output
+    )
   }
+  unlink(browser_log)
   message("  captured: ", screenshot_file)
 }
 
