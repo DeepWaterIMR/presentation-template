@@ -144,13 +144,38 @@ if (is.null(output_dir)) {
   if (dir.exists(build_dir)) {
     unlink(build_dir, recursive = TRUE)
   }
-  dir.create(file.path(build_dir, "R"), recursive = TRUE)
-  dir.create(file.path(build_dir, "assets"), recursive = TRUE)
+  dir.create(build_dir, recursive = TRUE)
 
-  file.copy("presentation.qmd", build_dir, overwrite = TRUE)
-  file.copy("R/presentation_helpers.R", file.path(build_dir, "R"), overwrite = TRUE)
-  file.copy("assets/theme.scss", file.path(build_dir, "assets"), overwrite = TRUE)
-  file.copy("assets/HI_logo_farger_engelsk.png", file.path(build_dir, "assets"), overwrite = TRUE)
+  required_sources <- c(
+    "presentation.qmd",
+    "R",
+    "assets"
+  )
+  optional_sources <- c("slide-patterns.yml")
+  required_sources <- c(
+    required_sources,
+    optional_sources[file.exists(optional_sources)]
+  )
+  missing_sources <- required_sources[!file.exists(required_sources)]
+  if (length(missing_sources)) {
+    stop(
+      "Isolated render is missing required sources: ",
+      paste(missing_sources, collapse = ", ")
+    )
+  }
+  copied <- vapply(
+    required_sources,
+    function(source) {
+      file.copy(source, build_dir, overwrite = TRUE, recursive = TRUE)
+    },
+    logical(1)
+  )
+  if (any(!copied)) {
+    stop(
+      "Failed to copy isolated render sources: ",
+      paste(required_sources[!copied], collapse = ", ")
+    )
+  }
 
   old_wd <- setwd(build_dir)
   on.exit(setwd(old_wd), add = TRUE)

@@ -1,0 +1,102 @@
+name: Validate and deploy learning hub
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: "4.6.0"
+          use-public-rspm: true
+
+      - uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          version: "1.9.37"
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            any::quarto@1.5.1
+            any::yaml@2.3.12
+            any::jsonlite@2.0.0
+            any::knitr@1.51
+            any::ragg@1.5.2
+            any::systemfonts@1.3.2
+            any::png@0.1.9
+            any::ggplot2@4.0.3
+          cache-version: 1
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22.13.0"
+          cache: npm
+          cache-dependency-path: website/package-lock.json
+
+      - name: Validate skills and installer
+        run: |
+          Rscript scripts/validate_skills.R
+          Rscript scripts/test_installer.R
+
+      - name: Render and capture the complete sampler
+        run: |
+          Rscript render_presentation.R --output-dir website/public/demo
+          Rscript capture_slides.R --html website/public/demo/presentation.html --output-dir website/public/previews --manifest slide-patterns.yml --fragment-state last
+          Rscript scripts/generate_pattern_catalog.R --preview-dir website/public/previews --output website/public/patterns.json --require-previews
+
+      - name: Build the static learning hub
+        working-directory: website
+        env:
+          GITHUB_PAGES: "true"
+        run: |
+          npm ci
+          npm run lint
+          npm run build
+          test -f dist/client/index.html
+          find dist/client/_next/static/css -name '*.css' -print -quit | grep -q .
+          test -f dist/client/patterns.json
+          test -f dist/client/previews/background-art.png
+          test -f dist/client/demo/presentation.html
+
+      - name: Locate Chromium for browser acceptance
+        run: echo "PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=$(command -v google-chrome || command -v google-chrome-stable)" >> "$GITHUB_ENV"
+
+      - name: Test desktop and mobile learning-hub behavior
+        working-directory: website
+        run: npm run test:e2e
+
+      - name: Configure GitHub Pages
+        if: github.event_name != 'pull_request'
+        uses: actions/configure-pages@v6
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: website/dist/client
+
+  deploy:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

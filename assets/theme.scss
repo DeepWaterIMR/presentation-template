@@ -423,11 +423,11 @@ $presentation-font-size-root: 30px;
    (9+ columns) and .table-medium for mid-width tables with an explanation
    column. Both override the base 0.66em only when applied. */
 .table-tight table {
-  font-size: 0.72em;
+  font-size: 0.56em;
 }
 
 .table-medium table {
-  font-size: 0.68em;
+  font-size: 0.62em;
 }
 
 /* Fade-in sign-off under a conclusions grid. Add {.fragment .fade-in} on the
@@ -531,3 +531,33 @@ $presentation-font-size-root: 30px;
 .concept-sat.pos-left { grid-area: left; }
 .concept-sat.pos-tl { grid-area: tl; }
 .concept-sat.pos-tr { grid-area: tr; }
+
+
+/* Decorative background-art sampler. The section title is represented by the
+   visible title block, and the usual section watermark is intentionally hidden
+   so it does not land on the full-width artwork. */
+.reveal .slides section.background-art > h2,
+.reveal .slides section.background-art::after {
+  content: none;
+  display: none;
+}
+
+.background-copy {
+  background: rgba(247, 248, 245, 0.9);
+  border-left: 7px solid var(--imr-sky);
+  max-width: 58%;
+  padding: 1.2rem 1.4rem;
+}
+
+.background-copy .title-heading {
+  font-size: 1.85em;
+  max-width: none;
+}
+
+.background-copy .title-subtitle {
+  max-width: none;
+}
+
+.custom-font-demo .figure-panel img {
+  max-height: 520px;
+}

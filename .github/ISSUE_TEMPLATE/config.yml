@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Presentation template learning hub
+    url: https://deepwaterimr.github.io/presentation-template/
+    about: Browse supported patterns and usage guidance before opening an issue.

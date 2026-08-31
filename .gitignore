@@ -21,3 +21,10 @@
 .DS_Store
 
 **/*.quarto_ipynb
+
+# Generated sampler and learning-hub artifacts
+/assets/generated/
+/website/public/patterns.json
+/website/public/previews/
+/website/public/demo/
+!website/public/og.png

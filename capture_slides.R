@@ -60,14 +60,17 @@ playwright_browser_candidates <- function() {
   }
 
   patterns <- c(
-    file.path("chromium-*", "chrome-mac", "Chromium.app", "Contents", "MacOS", "Chromium"),
-    file.path("chromium-*", "chrome-linux", "chrome"),
-    file.path("chromium-*", "chrome-win", "chrome.exe"),
+    file.path("chromium_headless_shell-*", "chrome-headless-shell-mac*", "chrome-headless-shell"),
+    file.path("chromium_headless_shell-*", "chrome-headless-shell-linux*", "chrome-headless-shell"),
     file.path("chromium_headless_shell-*", "chrome-mac", "headless_shell"),
     file.path("chromium_headless_shell-*", "chrome-linux", "headless_shell"),
-    file.path("chromium_headless_shell-*", "chrome-win", "headless_shell.exe")
+    file.path("chromium_headless_shell-*", "chrome-win", "headless_shell.exe"),
+    file.path("chromium-*", "chrome-mac-*", "Google Chrome for Testing.app", "Contents", "MacOS", "Google Chrome for Testing"),
+    file.path("chromium-*", "chrome-mac", "Chromium.app", "Contents", "MacOS", "Chromium"),
+    file.path("chromium-*", "chrome-linux*", "chrome"),
+    file.path("chromium-*", "chrome-linux", "chrome"),
+    file.path("chromium-*", "chrome-win", "chrome.exe")
   )
-
   unique(unlist(
     lapply(
       roots,
@@ -83,6 +86,8 @@ browser_candidates <- c(
   Sys.getenv("PRESENTATION_QA_BROWSER", unset = ""),
   Sys.which("chromium"),
   Sys.which("chromium-browser"),
+  Sys.which("google-chrome"),
+  Sys.which("google-chrome-stable"),
   playwright_browser_candidates()
 )
 browser_candidates <- browser_candidates[
@@ -101,36 +106,59 @@ if (!length(browser_candidates)) {
 browser <- browser_candidates[[1]]
 message("Using background QA browser: ", browser)
 
-html <- readLines(html_file, warn = FALSE)
-section_lines <- grep(
-  '<section id="[^"]+" class="slide level2',
+html <- paste(readLines(html_file, warn = FALSE), collapse = "\n")
+section_tags <- regmatches(
   html,
-  value = TRUE
-)
-slide_ids <- unique(sub('.*<section id="([^"]+)".*', "\\1", section_lines))
+  gregexpr("<section\\b[^>]*>", html, perl = TRUE)
+)[[1]]
+section_tags <- section_tags[
+  grepl('\\bclass="[^"]*\\bslide[[:space:]]+level2\\b[^"]*"', section_tags, perl = TRUE) &
+    grepl('\\bid="[^"]+"', section_tags, perl = TRUE)
+]
+slide_ids <- unique(sub('.*\\bid="([^"]+)".*', "\\1", section_tags, perl = TRUE))
 if (!length(slide_ids)) {
   stop("Could not find RevealJS slide IDs in ", html_file)
 }
 
-old_screenshots <- list.files(
-  output_dir,
-  pattern = "^slide-[0-9]+-.*[.]png$",
-  full.names = TRUE
+manifest_arg <- arg_value("--manifest")
+if (!is.null(manifest_arg)) {
+  manifest_file <- normalizePath(manifest_arg, mustWork = TRUE)
+  manifest <- yaml::read_yaml(manifest_file)
+  expected_ids <- vapply(
+    manifest$patterns,
+    function(pattern) pattern$id,
+    character(1)
+  )
+  if (!identical(slide_ids, expected_ids)) {
+    stop(
+      "Rendered slides do not match the requested manifest. Rendered: ",
+      paste(slide_ids, collapse = ", "),
+      "; expected: ",
+      paste(expected_ids, collapse = ", ")
+    )
+  }
+}
+
+old_screenshots <- setdiff(
+  list.files(output_dir, pattern = "^[a-z0-9-]+[.]png$", full.names = TRUE),
+  file.path(output_dir, "contact-sheet.png")
 )
 if (length(old_screenshots)) {
   unlink(old_screenshots)
 }
 
-html_url <- paste0("file://", URLencode(html_file))
+fragment_state <- arg_value("--fragment-state", "initial")
+if (!fragment_state %in% c("initial", "last")) {
+  stop("--fragment-state must be either 'initial' or 'last'.")
+}
+query <- if (identical(fragment_state, "last")) "?qa-fragments=last" else ""
+html_url <- paste0("file://", URLencode(html_file), query)
 screenshot_files <- character(length(slide_ids))
 for (index in seq_along(slide_ids)) {
   slide_id <- slide_ids[[index]]
   safe_id <- gsub("[^[:alnum:]-]+", "-", slide_id)
   screenshot_file <- normalizePath(
-    file.path(
-      output_dir,
-      sprintf("slide-%02d-%s.png", index, safe_id)
-    ),
+    file.path(output_dir, paste0(safe_id, ".png")),
     mustWork = FALSE
   )
   screenshot_files[[index]] <- screenshot_file
@@ -138,7 +166,7 @@ for (index in seq_along(slide_ids)) {
   dir.create(profile_dir)
 
   chrome_args <- c(
-    "--headless=new",
+    "--headless",
     "--disable-background-networking",
     "--disable-component-update",
     "--disable-gpu",

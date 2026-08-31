@@ -1,0 +1,12 @@
+<script>
+(() => {
+  if (new URLSearchParams(window.location.search).get("qa-fragments") !== "last") return;
+  const revealLastFragment = () => {
+    let steps = 0;
+    while (window.Reveal?.nextFragment() && steps < 100) steps += 1;
+  };
+  if (window.Reveal?.isReady()) revealLastFragment();
+  window.Reveal?.on("ready", revealLastFragment);
+  window.Reveal?.on("slidechanged", revealLastFragment);
+})();
+</script>

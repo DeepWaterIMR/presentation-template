@@ -1,6 +1,6 @@
 ---
 name: make-presentation
-description: Familiarize yourself with a scientific project, discuss and plan a Quarto presentation with the user, wait for slide-plan approval, then build, rerender, and visually review the deck. Use when starting a deck, revising slides, or connecting slides to changing analysis results.
+description: Plan and build a scientific Quarto presentation from an analysis project and rerenderable result sources. Use for a new deck, substantive slide revisions, or reconnecting slides to changed analysis outputs; use review-presentation for render-only or visual-QA work.
 ---
 
 Read `agent-workflows/make-presentation.md` and follow it.

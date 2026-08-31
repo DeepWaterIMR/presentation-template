@@ -131,14 +131,18 @@ deck_files <- c(
   "capture_slides.R",
   file.path("R", "presentation_helpers.R"),
   file.path("assets", "theme.scss"),
+  file.path("assets", "qa-fragments.html"),
   file.path("assets", "HI_logo_farger_engelsk.png"),
   file.path("assets", "fonts", "xkcd-script.ttf")
 )
 
 root_files <- c(
   file.path("agent-workflows", "make-presentation.md"),
+  file.path("agent-workflows", "review-presentation.md"),
   file.path(".agents", "skills", "make-presentation", "SKILL.md"),
-  file.path(".claude", "skills", "make-presentation", "SKILL.md")
+  file.path(".agents", "skills", "review-presentation", "SKILL.md"),
+  file.path(".claude", "skills", "make-presentation", "SKILL.md"),
+  file.path(".claude", "skills", "review-presentation", "SKILL.md")
 )
 
 message("Installing presentation starter into ", deck_dir)
@@ -175,4 +179,4 @@ message(
 message("     /usr/local/bin/Rscript render_presentation.R --project-root ", target)
 message("  5. Capture QA screenshots from ", presentation_dir, "/:")
 message("     /usr/local/bin/Rscript capture_slides.R")
-message("  6. Add a short presentation-workflow pointer to the project's AGENTS.md.")
+message("  6. Add short make-presentation and review-presentation pointers to the project's AGENTS.md.")

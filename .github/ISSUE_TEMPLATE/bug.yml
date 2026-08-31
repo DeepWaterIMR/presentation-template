@@ -1,0 +1,37 @@
+name: Bug report
+description: Report a reproducible problem with installation, rendering, capture, or the learning hub.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Affected surface
+      options:
+        - Installer
+        - Quarto sampler or downstream deck
+        - Render script
+        - Screenshot capture
+        - Learning hub
+        - Agent workflow or skill
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happened?
+      description: State the observed result and what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Minimal reproduction
+      description: Include the smallest safe example, relevant pattern ID, output format, and canvas size.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include operating system, R, Quarto, browser, and Node versions when relevant.

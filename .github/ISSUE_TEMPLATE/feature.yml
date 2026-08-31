@@ -1,0 +1,24 @@
+name: Pattern or feature proposal
+description: Propose a reusable slide pattern or repository improvement.
+title: "[Proposal]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: task
+    attributes:
+      label: Presentation task
+      description: What real audience, proof object, or maintenance problem does this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Example or evidence
+      description: Link or attach a safe example and explain why existing patterns are insufficient.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Proposed acceptance criteria
+      description: Describe the observable result, including rendering and review expectations.

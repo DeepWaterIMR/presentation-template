@@ -187,8 +187,16 @@ scenario_table <- function(spict) {
 
 plot_spict_trajectories <- function(spict) {
   if (is.null(spict)) {
-    plot.new()
-    text(0.5, 0.5, "Connect a compact result object to draw project trajectories.")
+    years <- 2016:2025
+    biomass <- c(0.72, 0.77, 0.83, 0.88, 0.96, 1.08, 1.15, 1.11, 1.23, 1.31)
+    fishing <- c(1.32, 1.24, 1.19, 1.08, 1.02, 0.93, 0.86, 0.91, 0.80, 0.74)
+    old_par <- par(no.readonly = TRUE)
+    on.exit(par(old_par))
+    par(mfrow = c(1, 2), mar = c(3.3, 3.7, 2.2, 0.8), mgp = c(2.1, 0.7, 0))
+    plot(years, biomass, type = "l", lwd = 4, col = "#056A89", xlab = "Year", ylab = "Relative biomass", main = "Illustrative sampler data")
+    abline(h = 1, col = "#6CA67A", lty = 2, lwd = 2)
+    plot(years, fishing, type = "l", lwd = 4, col = "#D44F56", xlab = "Year", ylab = "Relative pressure", main = "Illustrative sampler data")
+    abline(h = 1, col = "#6CA67A", lty = 2, lwd = 2)
     return(invisible(NULL))
   }
 

@@ -27,6 +27,7 @@ format:
     controls: true
     transition: fade
     embed-resources: true
+    include-after-body: assets/qa-fragments.html
 execute:
   echo: false
   warning: false
@@ -34,6 +35,7 @@ execute:
 params:
   config_file: "presentation.yml"
   project_root: "."
+  install_missing_packages: true
 ---
 
 ```{r}
@@ -42,6 +44,34 @@ params:
 # Keep embedded figures light so the self-contained HTML stays small: render
 # inline figures at screen (1x) resolution. Pre-optimize any external images
 # into an `optimized/` folder before embedding them (see README "File size").
+# Optional sampler dependencies, named once for both installation and loading.
+packages <- c(
+  ragg = NA,
+  systemfonts = NA
+)
+if (isTRUE(params$install_missing_packages)) {
+  missing <- packages[
+    !vapply(names(packages), requireNamespace, logical(1), quietly = TRUE)
+  ]
+  if (length(missing)) {
+    repos <- getOption("repos")
+    if (is.na(repos["CRAN"]) || repos["CRAN"] == "@CRAN@") {
+      repos["CRAN"] <- "https://cloud.r-project.org"
+      options(repos = repos)
+    }
+    lib <- strsplit(Sys.getenv("R_LIBS_USER"), .Platform$path.sep)[[1]][1]
+    if (!is.na(lib) && nzchar(lib)) {
+      if (!dir.exists(lib)) dir.create(lib, recursive = TRUE)
+      .libPaths(c(lib, .libPaths()))
+    }
+    options(install.packages.compile.from.source = "never")
+    install.packages(names(missing))
+  }
+}
+invisible(lapply(names(packages), function(package) {
+  suppressPackageStartupMessages(library(package, character.only = TRUE))
+}))
+
 knitr::opts_chunk$set(
   dev = "png",
   dev.args = list(bg = "transparent"),
@@ -49,6 +79,31 @@ knitr::opts_chunk$set(
   fig.retina = 1
 )
 source("R/presentation_helpers.R")
+dir.create("assets/generated", recursive = TRUE, showWarnings = FALSE)
+background_art_file <- "assets/generated/background-art.png"
+grDevices::png(background_art_file, width = 1600, height = 900, bg = "#f7f8f5")
+graphics::par(mar = rep(0, 4))
+graphics::plot.new()
+graphics::plot.window(xlim = c(0, 1), ylim = c(0, 1))
+graphics::polygon(
+  c(0, 1, 1, 0),
+  c(0.00, 0.00, 0.28, 0.12),
+  col = "#dcecef",
+  border = NA
+)
+graphics::lines(
+  seq(0, 1, length.out = 120),
+  0.12 + 0.045 * sin(seq(0, 4 * pi, length.out = 120)),
+  col = "#449bcf",
+  lwd = 14
+)
+graphics::lines(
+  seq(0, 1, length.out = 120),
+  0.07 + 0.025 * cos(seq(0, 5 * pi, length.out = 120)),
+  col = "#056a89",
+  lwd = 7
+)
+grDevices::dev.off()
 if (requireNamespace("ggplot2", quietly = TRUE)) {
   ggplot2::theme_set(presentation_theme())
 }
@@ -62,7 +117,8 @@ spict <- if (identical(cfg$data$adapter, "spict")) {
 }
 ```
 
-## {.title-slide}
+<!-- pattern:start title-slide -->
+## {#title-slide .title-slide}
 
 ::: {.title-kicker}
 `r cfg$project$meeting`
@@ -91,8 +147,10 @@ spict <- if (identical(cfg$data$adapter, "spict")) {
 ::: {.notes}
 Open with the purpose of the presentation in one sentence. State whether the audience is being asked to decide, discuss, or simply understand something.
 :::
+<!-- pattern:end title-slide -->
 
-## Start with the story {data-section="Introduction"}
+<!-- pattern:start process-flow -->
+## Start with the story {#process-flow data-section="Introduction"}
 
 ::: {.takeaway}
 `r cfg$project$story`
@@ -127,8 +185,10 @@ What should the audience remember when the slide is gone?
 ::: {.notes}
 Replace this starter slide after agreeing on the narrative spine. A strong deck reveals the structure early, especially when the later slides contain technical detail.
 :::
+<!-- pattern:end process-flow -->
 
-## Results update when the source project reruns {data-section="Workflow"}
+<!-- pattern:start provenance-grid -->
+## Results update when the source project reruns {#provenance-grid data-section="Workflow"}
 
 :::: {.grid-2}
 ::: {.card}
@@ -167,8 +227,10 @@ Rerender HTML for presenting and PDF for review or archiving.
 ::: {.notes}
 For SPiCT projects, the input is the annual `sum_<stock>_spict_<year>.rds` summary object written by the assessment workflow.
 :::
+<!-- pattern:end provenance-grid -->
 
-## Current model status {data-section="Results"}
+<!-- pattern:start metric-grid -->
+## Current model status {#metric-grid data-section="Results"}
 
 :::: {.metric-grid}
 ::: {.metric-card}
@@ -215,8 +277,10 @@ Replace this sentence with the finding that matters to the audience.
 ::: {.notes}
 This slide demonstrates a repeatable metric-card layout. Keep the metrics only when they support the main claim.
 :::
+<!-- pattern:end metric-grid -->
 
-## Trajectories should carry the argument {data-section="Results"}
+<!-- pattern:start text-figure -->
+## Trajectories should carry the argument {#text-figure data-section="Results"}
 
 :::: {.text-figure}
 ::: {.text-panel}
@@ -242,8 +306,10 @@ plot_spict_trajectories(spict)
 ::: {.notes}
 Charts should be generated from the compact result object. Use the analysis project for complex plotting functions and call those functions here when possible.
 :::
+<!-- pattern:end text-figure -->
 
-## Choose a layout by proof object {data-section="Style sampler"}
+<!-- pattern:start layout-selection -->
+## Choose a layout by proof object {#layout-selection data-section="Style sampler"}
 
 :::: {.grid-3}
 ::: {.card}
@@ -278,8 +344,10 @@ Pick the layout from the evidence type first, then write the slide claim.
 ::: {.notes}
 This sampler slide is meant to make the reusable classes visible in the starter deck. Delete it from project decks after selecting the relevant patterns.
 :::
+<!-- pattern:end layout-selection -->
 
-## Diagnostic cards keep technical checks legible {data-section="Style sampler"}
+<!-- pattern:start diagnostic-grid -->
+## Diagnostic cards keep technical checks legible {#diagnostic-grid data-section="Style sampler"}
 
 :::: {.diagnostic-grid}
 ::: {.diagnostic-card}
@@ -312,8 +380,10 @@ Use `.diagnostic-grid` for a short map of checks before showing dense diagnostic
 ::: {.notes}
 This style works well before residual, retrospective, sensitivity, or comparison plots.
 :::
+<!-- pattern:end diagnostic-grid -->
 
-## Emphasis styles separate caveats from conclusions {data-section="Style sampler"}
+<!-- pattern:start emphasis-components -->
+## Emphasis styles separate caveats from conclusions {#emphasis-components data-section="Style sampler"}
 
 ::: {.alert-box}
 Use `.alert-box` for a caveat, risk, or modelling limitation that should not be missed.
@@ -356,8 +426,10 @@ Use `.closing` for a short final line.
 ::: {.notes}
 Use emphasis styles sparingly. They are strongest when the rest of the slide is quiet.
 :::
+<!-- pattern:end emphasis-components -->
 
-## A wrapped title can sit beside a full-height figure {.fit-narrow data-section="Style sampler"}
+<!-- pattern:start fit-narrow -->
+## A wrapped title can sit beside a full-height figure {#fit-narrow .fit-narrow data-section="Style sampler"}
 
 ::: {.fit-results}
 - Put the interpretation in a narrow column on the left.
@@ -376,8 +448,10 @@ Use emphasis styles sparingly. They are strongest when the rest of the slide is 
 ::: {.notes}
 Use `.fit-narrow` (55 % text width) for portrait or square figures and `.fit-narrow .fit-narrow-tight` (44 %) for wide landscape figures where the content reaches further left. Place the figure with `.absolute` — e.g. `top=-150 right=-100 height="1000"` for portrait or `top=130 right=-100 width="950"` for landscape — so it bleeds past the slide margins. Put bullets in a `.fit-results` div; strong-tagged keywords pick up the `--imr-blue` colour automatically. Avoid wrapping `.fit-results` in a `.columns` grid: the `.absolute` figure floats independently of flow, so no container is needed on the text side.
 :::
+<!-- pattern:end fit-narrow -->
 
-## Swap two figures in the same spot {data-section="Style sampler"}
+<!-- pattern:start figure-swap -->
+## Swap two figures in the same spot {#figure-swap data-section="Style sampler"}
 
 ::: {.r-stack}
 
@@ -410,8 +484,10 @@ Stack figures in a `.r-stack` and pair `.fade-out` / `.fade-in` on the same `fra
 ::: {.notes}
 Both panels here draw the same placeholder; in a real deck the two chunks would plot different objects. Use `.fade-in-then-out` for the middle steps of a longer sequence so each figure appears, then clears for the next.
 :::
+<!-- pattern:end figure-swap -->
 
-## Pace a multi-figure argument {data-section="Style sampler"}
+<!-- pattern:start figure-walkthrough -->
+## Pace a multi-figure argument {#figure-walkthrough data-section="Style sampler"}
 
 :::: {.columns}
 
@@ -474,8 +550,10 @@ Sync each left-column `.fragment` and its figure on the same `fragment-index`. I
 ::: {.notes}
 All three chunks draw the same placeholder; in a real deck they would plot different objects (for example capability, then cost, then an effort trade-off). This is the pattern behind a text-left / figure-right walkthrough. Keep the base figure legible on its own in case the presenter skips the fragments. Chunk labels deliberately avoid the `fig-` prefix so Quarto does not add a "Figure 1" caption.
 :::
+<!-- pattern:end figure-walkthrough -->
 
-## Recreate a concept diagram in HTML/CSS {data-section="Style sampler"}
+<!-- pattern:start concept-hub -->
+## Recreate a concept diagram in HTML/CSS {#concept-hub data-section="Style sampler"}
 
 :::: {.text-figure}
 ::: {.text-panel}
@@ -507,8 +585,10 @@ Reach for `.concept-hub` for a hub-and-spoke; reuse `.grid-3` + `.card` for a fl
 ::: {.notes}
 The centre sits in the middle of a 3x3 grid; add only the satellite cells you need (`pos-top`, `pos-right`, `pos-br`, `pos-bottom`, `pos-bl`, `pos-left`, `pos-tl`, `pos-tr`). Good for an assessment model and its data inputs, a stock and its sources, or any agent/harness-style anatomy. This is hand-built markup, not a generated figure — edit the divs directly.
 :::
+<!-- pattern:end concept-hub -->
 
-## Tables can share a slide with a compact figure {data-section="Style sampler"}
+<!-- pattern:start table-with-figure -->
+## Tables can share a slide with a compact figure {#table-with-figure data-section="Style sampler"}
 
 ```{r}
 #| label: table-style-sampler
@@ -548,9 +628,222 @@ par(old_par)
 ::: {.notes}
 Use `.scenario-figure` when a narrow table needs a small visual check beneath it. Keep the figure compact so the table remains readable.
 :::
+<!-- pattern:end table-with-figure -->
 
-## Compare scenarios in one table {data-section="Results"}
+<!-- pattern:start wide-figure -->
+## Give a dense figure two-thirds of the slide {#wide-figure data-section="Style sampler"}
 
+::: {.text-figure .figure-wide-right}
+::: {.text-panel}
+- Use this variant when axis labels, facets, or uncertainty bands need more width.
+- Keep the interpretation to two or three short bullets.
+
+::: {.takeaway}
+Widen the proof object before shrinking it.
+:::
+:::
+
+::: {.figure-panel}
+```{r}
+#| label: plot-wide-figure
+#| fig-width: 9.2
+#| fig-height: 5.2
+#| out-width: 100%
+plot_spict_trajectories(spict)
+```
+:::
+:::
+
+::: {.notes}
+Add `.figure-wide-right` to `.text-figure` when the chart needs roughly two-thirds of the slide. If the figure still feels crowded, remove text rather than reducing labels below the presentation minimum.
+:::
+<!-- pattern:end wide-figure -->
+
+<!-- pattern:start map-layout -->
+## Maps need room for geography and context {#map-layout data-section="Style sampler"}
+
+::: {.text-figure .map-slide}
+::: {.text-panel}
+- State why location changes the interpretation.
+- Keep the legend short and the mapped area uncluttered.
+
+::: {.takeaway}
+Use `.map-slide` when text and geography need balanced weight.
+:::
+:::
+
+::: {.figure-panel}
+```{r}
+#| label: plot-map-layout
+#| fig-width: 7.2
+#| fig-height: 5.3
+#| out-width: 100%
+old_par <- graphics::par(no.readonly = TRUE)
+graphics::par(mar = c(1.2, 1.2, 0.5, 0.5), xaxs = "i", yaxs = "i")
+graphics::plot.new()
+graphics::plot.window(xlim = c(0, 10), ylim = c(0, 8), asp = 1)
+graphics::polygon(c(0.3, 3.1, 4.2, 2.4, 0.4), c(0.3, 0.8, 3.2, 6.9, 7.6), col = "#d6dedb", border = "#667985", lwd = 2)
+graphics::polygon(c(7.0, 9.8, 9.8, 8.1, 6.6), c(0.4, 0.4, 7.7, 6.1, 2.8), col = "#e7ece8", border = "#667985", lwd = 2)
+graphics::points(c(4.8, 5.6, 6.1, 5.2), c(2.1, 3.7, 5.4, 6.4), pch = 21, bg = "#d44f56", col = "white", cex = 2.2, lwd = 2)
+graphics::text(5.4, 0.8, "Survey stations", col = "#173042", cex = 1.2)
+graphics::par(old_par)
+```
+:::
+:::
+
+::: {.notes}
+The `.map-slide` modifier gives the text and map near-equal width. Use `.figure-wide-right` instead when the geographic proof should dominate.
+:::
+<!-- pattern:end map-layout -->
+
+<!-- pattern:start absolute-figure -->
+## Let one scientific figure reach the slide edge {#absolute-figure data-section="Style sampler"}
+
+::: {.columns}
+::: {.column width="34%"}
+- Use a normal RevealJS column for the interpretation.
+- Place the dominant figure inside the wide column.
+- Apply `.absolute` to the figure output, not to unrelated text.
+
+::: {.takeaway}
+This is the supported escape hatch for figure-heavy science slides.
+:::
+:::
+
+::: {.column width="66%"}
+```{r}
+#| label: plot-absolute-figure
+#| classes: absolute
+#| fig-width: 9.4
+#| fig-height: 5.6
+#| out-width: 105%
+x <- seq(0, 1, length.out = 80)
+graphics::plot(x, 0.35 + 0.5 * x + 0.07 * sin(10 * x), type = "l", lwd = 5, col = "#056a89", xlab = "Time", ylab = "Relative index", bty = "l")
+graphics::polygon(c(x, rev(x)), c(0.29 + 0.5 * x, rev(0.41 + 0.5 * x)), col = grDevices::adjustcolor("#449bcf", 0.2), border = NA)
+graphics::lines(x, 0.35 + 0.5 * x + 0.07 * sin(10 * x), lwd = 5, col = "#056a89")
+```
+:::
+:::
+
+::: {.notes}
+Pair RevealJS `.columns` with an `.absolute` figure in the wide column. Reserve arbitrary freehand positions for true hero images and small decorative accents.
+:::
+<!-- pattern:end absolute-figure -->
+
+<!-- pattern:start background-art -->
+## Decorative art can sit behind the message {#background-art .background-art background-image="assets/generated/background-art.png" background-size="cover" background-position="center"}
+
+::: {.background-copy}
+::: {.title-kicker}
+Background image
+:::
+
+::: {.title-heading}
+Keep decoration behind the message.
+:::
+
+::: {.title-subtitle}
+Use a slide background for wide artwork so the graphic spans the canvas and never sits on top of the text.
+:::
+:::
+
+::: {.notes}
+A `background-image` is preferable to an absolute image chunk for edge-to-edge decorative graphics. The capture workflow must discover this slide even though Reveal inserts `data-background-*` attributes into its section tag.
+:::
+<!-- pattern:end background-art -->
+
+<!-- pattern:start custom-font -->
+## Bundle occasional hand-drawn annotations {#custom-font .custom-font-demo data-section="Style sampler"}
+
+::: {.text-figure}
+::: {.text-panel}
+- Keep the font file under `assets/fonts/`.
+- Register it with `systemfonts`.
+- Render with `ragg`, not the default quartz PNG device.
+
+::: {.takeaway}
+The deck stays self-contained with no system font installation.
+:::
+:::
+
+::: {.figure-panel}
+```{r}
+#| label: plot-custom-font
+#| dev: ragg_png
+#| fig-width: 7.4
+#| fig-height: 4.8
+#| out-width: 100%
+family <- register_xkcd_font()
+graphics::plot(c(0, 1), c(0, 1), type = "n", axes = FALSE, xlab = "", ylab = "")
+graphics::arrows(0.16, 0.28, 0.78, 0.72, length = 0.12, lwd = 4, col = "#056a89")
+graphics::text(0.48, 0.48, "Explain the jump", family = family, cex = 2.1, col = "#d44f56", srt = 12)
+graphics::points(0.82, 0.75, pch = 21, bg = "#6ca67a", col = "white", cex = 3, lwd = 2)
+```
+:::
+:::
+
+::: {.notes}
+The bundled TTF is the only binary font asset that must stay versioned. The `ragg_png` device honours `systemfonts::register_font()`; the default macOS quartz PNG device does not.
+:::
+<!-- pattern:end custom-font -->
+
+<!-- pattern:start table-variants -->
+## Use named table sizes before shrinking text {#table-variants data-section="Style sampler"}
+
+::: {.columns}
+::: {.column width="49%"}
+### Medium table
+
+::: {.table-medium}
+```{r}
+#| label: table-medium-demo
+knitr::kable(
+  data.frame(
+    Scenario = c("Reference", "Lower", "Upper"),
+    Catch = c(780, 720, 840),
+    Interpretation = c("Central case", "Lower pressure", "Higher pressure")
+  ),
+  align = c("l", "r", "l")
+)
+```
+:::
+:::
+
+::: {.column width="49%"}
+### Tight table
+
+::: {.table-tight}
+```{r}
+#| label: table-tight-demo
+knitr::kable(
+  data.frame(
+    Year = 2024:2026,
+    A = c(1.02, 1.04, 1.05),
+    B = c(0.91, 0.95, 0.98),
+    C = c(0.84, 0.88, 0.92),
+    D = c(1.12, 1.09, 1.06),
+    E = c(0.76, 0.79, 0.82)
+  ),
+  digits = 2
+)
+```
+:::
+:::
+:::
+
+::: {.takeaway}
+If a named size is still too small, move columns to the appendix.
+:::
+
+::: {.notes}
+Use `.table-medium` for a mid-width table with an explanation column and `.table-tight` for a genuinely wide table. Neither class authorizes unreadably dense content.
+:::
+<!-- pattern:end table-variants -->
+
+<!-- pattern:start scenario-table -->
+## Compare scenarios in one table {#scenario-table data-section="Results"}
+
+::: {.table-medium}
 ```{r}
 #| label: scenario-table
 knitr::kable(
@@ -558,6 +851,7 @@ knitr::kable(
   align = c("l", "r", "r", "r")
 )
 ```
+:::
 
 ::: {.takeaway}
 State the decision-facing comparison in one sentence.
@@ -566,8 +860,10 @@ State the decision-facing comparison in one sentence.
 ::: {.notes}
 Keep tables narrow enough to read from the back of the room. Put the full scenario table in an appendix if more columns are needed.
 :::
+<!-- pattern:end scenario-table -->
 
-## End with what should stick {data-section="Close"}
+<!-- pattern:start takeaway-grid -->
+## End with what should stick {#takeaway-grid data-section="Close"}
 
 :::: {.takeaway-grid}
 ::: {.takeaway-card}
@@ -602,3 +898,4 @@ Thank you — questions and discussion
 ::: {.notes}
 Do not end on a generic thank-you slide. End on the message the audience should remember. The `.closing-inline` fragment fades in on the presenter's last click, so the conclusions boxes are the resting state and the sign-off appears only when the presenter is ready to invite questions.
 :::
+<!-- pattern:end takeaway-grid -->
