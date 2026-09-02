@@ -138,8 +138,8 @@ if (!is.null(manifest_arg)) {
   manifest_file <- normalizePath(manifest_arg, mustWork = TRUE)
   manifest <- yaml::read_yaml(manifest_file)
   expected_ids <- vapply(
-    manifest$patterns,
-    function(pattern) pattern$id,
+    manifest$entries,
+    function(entry) entry$id,
     character(1)
   )
   if (!identical(slide_ids, expected_ids)) {

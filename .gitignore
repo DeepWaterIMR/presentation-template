@@ -24,7 +24,7 @@
 
 # Generated sampler and learning-hub artifacts
 /assets/generated/
-/website/public/patterns.json
+/website/public/layouts.json
 /website/public/previews/
 /website/public/demo/
 !website/public/og.png

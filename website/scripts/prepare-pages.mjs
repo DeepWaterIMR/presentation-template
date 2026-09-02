@@ -12,6 +12,6 @@ if (existsSync(nestedAssets)) {
   console.log("Prepared GitHub Pages asset tree at dist/client/_next.");
 }
 
-if (!existsSync(resolve(clientRoot, "index.html")) || !existsSync(resolve(clientRoot, "patterns.json")) || !existsSync(publicAssets)) {
+if (!existsSync(resolve(clientRoot, "index.html")) || !existsSync(resolve(clientRoot, "layouts.json")) || !existsSync(publicAssets)) {
   throw new Error("Static Pages output is incomplete.");
 }

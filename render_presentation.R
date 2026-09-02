@@ -151,7 +151,7 @@ if (is.null(output_dir)) {
     "R",
     "assets"
   )
-  optional_sources <- c("slide-patterns.yml")
+  optional_sources <- c("slide-layouts.yml")
   required_sources <- c(
     required_sources,
     optional_sources[file.exists(optional_sources)]

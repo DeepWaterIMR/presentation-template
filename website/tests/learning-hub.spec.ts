@@ -8,11 +8,11 @@ test("catalogue, deep links, dialog, copy, and responsive layout", async ({ page
 
   await page.goto("/presentation-template/");
   await expect(page).toHaveTitle("Presentation Template | DeepWaterIMR");
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Choose the proof. Then choose the slide.");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Match each scientific claim with an appropriate slide layout.");
 
-  const cards = page.locator(".pattern-card");
-  await expect(cards).toHaveCount(21);
-  const previewImages = page.locator(".pattern-image img");
+  const cards = page.locator(".layout-card");
+  await expect(cards).toHaveCount(15);
+  const previewImages = page.locator(".layout-image img");
   for (let index = 0; index < await previewImages.count(); index += 1) {
     const preview = previewImages.nth(index);
     await preview.scrollIntoViewIfNeeded();
@@ -26,9 +26,9 @@ test("catalogue, deep links, dialog, copy, and responsive layout", async ({ page
   const samplerResponse = await page.request.get(new URL(samplerHref!, page.url()).href);
   expect(samplerResponse.ok()).toBe(true);
 
-  await page.getByLabel("Search slide patterns").fill("map");
+  await page.getByLabel("Search slide layouts").fill("map");
   await expect(cards).toHaveCount(2);
-  const mapCard = page.getByRole("button", { name: "Inspect Balanced map layout" });
+  const mapCard = page.getByRole("button", { name: "Inspect Map + context" });
   await mapCard.focus();
   await expect(mapCard).toBeFocused();
   expect(await mapCard.evaluate((element) => getComputedStyle(element).outlineStyle)).not.toBe("none");
@@ -36,9 +36,9 @@ test("catalogue, deep links, dialog, copy, and responsive layout", async ({ page
 
   const dialog = page.getByRole("dialog");
   await expect(dialog).toBeVisible();
-  await expect(dialog.getByRole("heading", { name: "Balanced map layout" })).toBeVisible();
-  await expect(page).toHaveURL(/#pattern\/map-layout$/);
-  await expect(dialog.getByAltText("Rendered example of Balanced map layout")).toBeVisible();
+  await expect(dialog.getByRole("heading", { name: "Map + context" })).toBeVisible();
+  await expect(page).toHaveURL(/#layout\/map-context$/);
+  await expect(dialog.getByAltText("Rendered example of Map + context")).toBeVisible();
   const copyButton = dialog.getByRole("button", { name: "Copy" });
   if (testInfo.project.name === "mobile") {
     await copyButton.focus();
@@ -46,22 +46,22 @@ test("catalogue, deep links, dialog, copy, and responsive layout", async ({ page
   } else {
     await copyButton.click();
   }
-  await expect(dialog.getByText("Pattern source copied to the clipboard.")).toHaveText("Pattern source copied to the clipboard.");
-  expect(await page.evaluate(() => navigator.clipboard.readText())).toContain("#map-layout");
+  await expect(dialog.getByText("Layout source copied to the clipboard.")).toHaveText("Layout source copied to the clipboard.");
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toContain("#map-context");
   await page.keyboard.press("Escape");
   await expect(dialog).toBeHidden();
   await expect(mapCard).toBeFocused();
 
-  await page.goto("/presentation-template/#pattern/background-art");
+  await page.goto("/presentation-template/#layout/background-image");
   await expect(page.getByRole("dialog")).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Decorative background art" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Background image" })).toBeVisible();
   await page.keyboard.press("Escape");
-  await page.getByLabel("Search slide patterns").fill("");
-  await page.getByRole("button", { name: "Decision", exact: true }).click();
+  await page.getByLabel("Search slide layouts").fill("");
+  await page.getByRole("button", { name: "Values", exact: true }).click();
   await expect(cards).toHaveCount(3);
 
   await page.emulateMedia({ reducedMotion: "reduce" });
-  const transitionDuration = await page.locator(".pattern-card").first().evaluate((element) => getComputedStyle(element).transitionDuration);
+  const transitionDuration = await page.locator(".layout-card").first().evaluate((element) => getComputedStyle(element).transitionDuration);
   expect(transitionDuration).toMatch(/0\.00001s|1e-05s|0s/);
   await expect.poll(async () => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
   expect(failedResponses).toEqual([]);

@@ -26,7 +26,7 @@ $presentation-font-size-root: 30px;
 
 .reveal .slides section.slide {
   box-sizing: border-box;
-  padding: 44px 58px;
+  padding: 40px 54px;
 }
 
 /* Quiet grey section watermark. Pinned to the slide bottom edge with
@@ -54,7 +54,7 @@ $presentation-font-size-root: 30px;
 
 .reveal h2 {
   border-bottom: 3px solid var(--imr-sky);
-  margin-bottom: 0.8em;
+  margin-bottom: 0.58em;
   padding-bottom: 0.2em;
 }
 
@@ -156,96 +156,128 @@ $presentation-font-size-root: 30px;
 
 .grid-2,
 .grid-3,
-.metric-grid,
-.takeaway-grid,
-.diagnostic-grid,
-.process-flow {
+.provenance-grid-body,
+.metric-grid-body,
+.process-flow-grid {
   display: grid;
   gap: 1rem;
 }
 
-.grid-2 {
+.grid-2,
+.provenance-grid-body {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-.text-figure {
+.grid-3,
+.metric-grid-body,
+.process-flow-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.text-figure-grid,
+.wide-figure-grid,
+.map-context-grid,
+.concept-image-grid,
+.conclusion-figure-grid,
+.table-figure-grid {
   align-items: center;
   display: grid;
-  gap: 1.35rem;
-  grid-template-columns: minmax(0, 0.42fr) minmax(0, 0.58fr);
+  gap: 1.25rem;
+  min-height: 560px;
 }
 
-.figure-wide-right {
-  grid-template-columns: minmax(0, 0.34fr) minmax(0, 0.66fr);
+.text-figure-grid,
+.concept-image-grid,
+.conclusion-figure-grid {
+  grid-template-columns: minmax(0, 0.30fr) minmax(0, 0.70fr);
 }
 
-.map-slide {
-  grid-template-columns: minmax(0, 0.48fr) minmax(0, 0.52fr);
+.wide-figure-grid {
+  grid-template-columns: minmax(0, 0.22fr) minmax(0, 0.78fr);
 }
 
-/* Full-bleed figure layout — figure placed with `.absolute` bleeds to the
-   slide edge while text stays in the left zone.
-
-   Usage:
-     ## Title {.fit-narrow}                        portrait figure, 55% text
-     ## Title {.fit-narrow .fit-narrow-tight}       landscape figure, 44% text
-
-   Place the figure with:
-     portrait:  ![](fig.png){.absolute top=-150 right=-100 height="1000"}
-     landscape: ![](fig.png){.absolute top=130 right=-100 width="950"}
-
-   Put bullets in a `.fit-results` div beside the figure.
-   `.bleed-figure-slide` is kept as an alias for back-compat. */
-
-.reveal .slides section.bleed-figure-slide h2,
-.reveal section.fit-narrow h2 {
-  max-width: 55%;
+.map-context-grid {
+  grid-template-columns: minmax(0, 0.26fr) minmax(0, 0.74fr);
 }
 
-.reveal section.fit-narrow.fit-narrow-tight h2 {
-  max-width: 44%;
+.table-figure-grid {
+  grid-template-columns: minmax(0, 0.56fr) minmax(0, 0.44fr);
 }
 
-/* Constrained bullet list for use with the bleed-figure layout. */
-.fit-results {
-  font-size: 0.92em;
-  max-width: 55%;
+.text-panel,
+.concept-text,
+.conclusion-text {
+  font-size: 0.86em;
 }
 
-.reveal section.fit-narrow.fit-narrow-tight .fit-results {
-  max-width: 44%;
-}
-
-.fit-results li {
+.text-panel li,
+.concept-text li {
   margin-bottom: 0.55em;
 }
 
-.fit-results li strong {
-  color: var(--imr-blue);
+.figure-panel,
+.concept-visual,
+.conclusion-visual {
+  min-width: 0;
 }
 
-/* Bleeding figure layout: a narrow text column beside a large figure that may
-   run toward, or past, the slide edge. Pair RevealJS `.columns`/`.column` with
-   an `.absolute` figure inside the wide column. Use on figure-heavy science
-   slides where one chart or map must dominate. */
-.reveal .column .absolute {
+.figure-panel img,
+.concept-visual img,
+.conclusion-visual img {
+  display: block;
+  margin: 0 auto;
+  max-height: 610px;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.edge-figure {
+  position: relative;
+}
+
+.edge-figure-text {
+  font-size: 0.86em;
+  max-width: 29%;
+  padding-top: 0.8rem;
+}
+
+.edge-figure-panel {
+  align-items: center;
+  bottom: -40px;
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  right: -54px;
+  top: 132px;
+  width: 69%;
+}
+
+.edge-figure-panel .cell-output-display,
+.edge-figure-panel .quarto-figure,
+.edge-figure-panel figure,
+.edge-figure-panel p {
   margin: 0;
+  width: 100%;
 }
 
-.add-space {
-  min-height: 1px;
+.edge-figure-panel img {
+  display: block;
+  margin: 0 auto;
+  max-height: 720px;
+  max-width: 100%;
+  object-fit: contain;
 }
 
-/* Decorative or hero images (species art, logos, overlay figures placed with
-   RevealJS `.absolute`) should not carry the default reveal image frame. */
-.accent-img img,
-.reveal img.accent-img {
-  background: none;
-  border: none;
-  box-shadow: none;
+.full-figure .cell-output-display,
+.full-figure .quarto-figure,
+.full-figure figure,
+.full-figure p {
+  margin-bottom: 0;
+  margin-top: 0;
 }
 
-.text-figure .figure-panel img {
+.full-figure img,
+.diagnostic-grid img {
   display: block;
   margin: 0 auto;
   max-height: 590px;
@@ -253,14 +285,13 @@ $presentation-font-size-root: 30px;
   object-fit: contain;
 }
 
-.text-figure .figure-panel img.tall {
-  max-height: 620px;
+.figure-walkthrough .columns {
+  align-items: center;
+  min-height: 560px;
 }
 
-.grid-3,
-.metric-grid,
-.takeaway-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+.layout-guide table {
+  font-size: 0.72em;
 }
 
 .card,
@@ -268,11 +299,12 @@ $presentation-font-size-root: 30px;
 .takeaway-card,
 .diagnostic-card,
 .flow-step {
-  background: #ffffff;
-  border: 1px solid var(--imr-line);
-  border-radius: 12px;
-  box-shadow: 0 3px 10px rgba(23, 48, 66, 0.06);
-  padding: 0.85rem 1rem;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  border-top: 3px solid var(--imr-sky);
+  box-shadow: none;
+  padding: 0.7rem 0.35rem;
 }
 
 .card-title {
@@ -308,21 +340,8 @@ $presentation-font-size-root: 30px;
   margin-top: 0.35rem;
 }
 
-.diagnostic-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  margin-top: 2rem;
-}
-
-.diagnostic-number {
-  color: var(--imr-sky);
-  font-size: 2.2em;
-  font-weight: 750;
-  line-height: 1;
-}
-
-.process-flow {
+.process-flow-grid {
   align-items: stretch;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .flow-step {
@@ -533,11 +552,11 @@ $presentation-font-size-root: 30px;
 .concept-sat.pos-tr { grid-area: tr; }
 
 
-/* Decorative background-art sampler. The section title is represented by the
+/* Contextual background-image example. The section title is represented by the
    visible title block, and the usual section watermark is intentionally hidden
    so it does not land on the full-width artwork. */
-.reveal .slides section.background-art > h2,
-.reveal .slides section.background-art::after {
+.reveal .slides section.background-image-slide > h2,
+.reveal .slides section.background-image-slide::after {
   content: none;
   display: none;
 }
@@ -558,6 +577,6 @@ $presentation-font-size-root: 30px;
   max-width: none;
 }
 
-.custom-font-demo .figure-panel img {
+.custom-figure-font .figure-panel img {
   max-height: 520px;
 }

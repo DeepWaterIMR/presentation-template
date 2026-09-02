@@ -7,12 +7,14 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 
-type Pattern = {
+type CatalogueEntry = {
   id: string;
-  title: string;
+  kind: "layout" | "feature";
+  name: string;
   category: string;
-  proofObject: string;
+  evidence: string;
   use: string;
+  code: string;
   classes: string[];
   caveat: string;
   preview: string;
@@ -20,55 +22,57 @@ type Pattern = {
 };
 
 type Catalogue = {
-  patterns: Pattern[];
+  entries: CatalogueEntry[];
 };
 
-const proofChoices = [
-  { proof: "One result", pattern: "Text + figure", description: "Keep the interpretation visible beside a dominant chart or map." },
-  { proof: "Exact values", pattern: "Decision table", description: "Use a narrow table when scenario values matter more than shape." },
-  { proof: "A sequence", pattern: "Progressive reveal", description: "Swap or advance figures in place without moving the audience's eye." },
-  { proof: "A system", pattern: "Concept diagram", description: "Build an editable hub, flow, or labelled grid directly in HTML and CSS." },
+const layoutChoices = [
+  { evidence: "One empirical figure", layout: "Text + figure", code: ".text-figure", id: "text-figure", description: "Use a short interpretation column and give the figure about 70% of the content area." },
+  { evidence: "Dense or faceted figure", layout: "Wide figure", code: ".wide-figure", id: "wide-figure", description: "Use a narrow interpretation column and reserve nearly the full width for the figure." },
+  { evidence: "Spatial result", layout: "Map + context", code: ".map-context", id: "map-context", description: "Keep the mapped area dominant and retain only the geographic context needed to interpret it." },
+  { evidence: "Exact values", layout: "Scenario table", code: ".scenario-table", id: "scenario-table", description: "Use a focused full-width table when exact scenario values matter more than graphical shape." },
+  { evidence: "Concept or mechanism", layout: "Concept + image", code: ".concept-image", id: "concept-image", description: "Pair the explanation with a photograph, schematic, map, or representative scientific figure." },
+  { evidence: "Principal conclusion", layout: "Conclusion + figure", code: ".conclusion-figure", id: "conclusion-figure", description: "Keep the conclusion and its most relevant supporting visual visible during discussion." },
 ];
 
 const workflow = [
-  { number: "01", title: "Orient", description: "Read the analysis project and locate the compact result objects." },
-  { number: "02", title: "Plan", description: "Agree on audience, purpose, claim spine, proof objects, and output name." },
-  { number: "03", title: "Build", description: "Regenerate every value and figure from stable project-relative inputs." },
-  { number: "04", title: "Review", description: "Render, inspect screenshots, correct layout, and check the final file size." },
+  { number: "01", title: "Orient", description: "Read the analysis project and identify the available results, figures, and data-loading interfaces." },
+  { number: "02", title: "Plan", description: "Agree on the audience, purpose, sequence of claims, supporting evidence, and output name." },
+  { number: "03", title: "Build", description: "Generate displayed values and figures from stable project-relative inputs." },
+  { number: "04", title: "Review", description: "Render the presentation, inspect every slide, correct layout problems, and check the final file size." },
 ];
 
 const skills = [
-  { name: "make-presentation", label: "Create", description: "Orient to a scientific project, agree on the slide plan, then build from rerenderable inputs." },
-  { name: "review-presentation", label: "Review", description: "Render an existing deck, inspect every slide, fix visual problems, and verify delivery artifacts." },
-  { name: "maintain-presentation-template", label: "Maintain", description: "Add patterns, update the catalogue and learning hub, and keep installer and CI contracts aligned." },
+  { name: "make-presentation", label: "Create", description: "Orient to a scientific project, agree on the slide plan, and build the presentation from rerenderable inputs." },
+  { name: "review-presentation", label: "Review", description: "Render an existing presentation, inspect every slide, correct visual problems, and verify delivery files." },
+  { name: "maintain-presentation-template", label: "Maintain", description: "Add layouts, update the catalogue and learning hub, and keep installer and validation checks aligned." },
 ];
 
-function resolvePatternFromHash(patterns: Pattern[]) {
-  const prefix = "#pattern/";
+function resolveEntryFromHash(entries: CatalogueEntry[]) {
+  const prefix = "#layout/";
   if (!window.location.hash.startsWith(prefix)) return null;
   const id = decodeURIComponent(window.location.hash.slice(prefix.length));
-  return patterns.find((pattern) => pattern.id === id) ?? null;
+  return entries.find((entry) => entry.id === id) ?? null;
 }
 
 export default function LearningHub() {
-  const [patterns, setPatterns] = useState<Pattern[]>([]);
+  const [entries, setEntries] = useState<CatalogueEntry[]>([]);
   const [loadError, setLoadError] = useState("");
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("All");
-  const [selected, setSelected] = useState<Pattern | null>(null);
+  const [selected, setSelected] = useState<CatalogueEntry | null>(null);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     let active = true;
-    fetch("./patterns.json")
+    fetch("./layouts.json")
       .then((response) => {
-        if (!response.ok) throw new Error("The pattern catalogue could not be loaded.");
+        if (!response.ok) throw new Error("The layout catalogue could not be loaded.");
         return response.json() as Promise<Catalogue>;
       })
       .then((catalogue) => {
         if (!active) return;
-        setPatterns(catalogue.patterns);
-        setSelected(resolvePatternFromHash(catalogue.patterns));
+        setEntries(catalogue.entries);
+        setSelected(resolveEntryFromHash(catalogue.entries));
       })
       .catch((error: Error) => {
         if (active) setLoadError(error.message);
@@ -79,35 +83,37 @@ export default function LearningHub() {
   }, []);
 
   useEffect(() => {
-    const syncHash = () => setSelected(resolvePatternFromHash(patterns));
+    const syncHash = () => setSelected(resolveEntryFromHash(entries));
     window.addEventListener("hashchange", syncHash);
     return () => window.removeEventListener("hashchange", syncHash);
-  }, [patterns]);
+  }, [entries]);
 
+  const layouts = useMemo(() => entries.filter((entry) => entry.kind === "layout"), [entries]);
+  const features = useMemo(() => entries.filter((entry) => entry.kind === "feature"), [entries]);
   const categories = useMemo(
-    () => ["All", ...Array.from(new Set(patterns.map((pattern) => pattern.category)))],
-    [patterns],
+    () => ["All", ...Array.from(new Set(layouts.map((layout) => layout.category)))],
+    [layouts],
   );
 
-  const visiblePatterns = useMemo(() => {
+  const visibleLayouts = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
-    return patterns.filter((pattern) => {
-      const inCategory = category === "All" || pattern.category === category;
-      const searchable = [pattern.title, pattern.use, pattern.proofObject, pattern.category, ...pattern.classes].join(" ").toLowerCase();
+    return layouts.filter((layout) => {
+      const inCategory = category === "All" || layout.category === category;
+      const searchable = [layout.name, layout.use, layout.evidence, layout.code, layout.category, ...layout.classes].join(" ").toLowerCase();
       return inCategory && (!normalizedQuery || searchable.includes(normalizedQuery));
     });
-  }, [patterns, query, category]);
+  }, [layouts, query, category]);
 
-  function openPattern(pattern: Pattern) {
+  function openEntry(entry: CatalogueEntry) {
     setCopied(false);
-    setSelected(pattern);
-    window.history.replaceState(null, "", `#pattern/${encodeURIComponent(pattern.id)}`);
+    setSelected(entry);
+    window.history.replaceState(null, "", `#layout/${encodeURIComponent(entry.id)}`);
   }
 
-  function closePattern() {
+  function closeEntry() {
     setSelected(null);
     setCopied(false);
-    window.history.replaceState(null, "", "#patterns");
+    window.history.replaceState(null, "", "#layouts");
   }
 
   async function copySnippet() {
@@ -126,7 +132,7 @@ export default function LearningHub() {
         </Link>
         <nav aria-label="Primary navigation">
           <Link href="#choose">Choose a layout</Link>
-          <Link href="#patterns">Patterns</Link>
+          <Link href="#layouts">Layouts</Link>
           <Link href="#start">Get started</Link>
           <a href="https://github.com/DeepWaterIMR/presentation-template">GitHub</a>
         </nav>
@@ -134,30 +140,29 @@ export default function LearningHub() {
 
       <section className="hero" id="top">
         <div className="hero-copy">
-          <p className="eyebrow">Scientific presentations, built to rerender</p>
-          <h1>Choose the proof. Then choose the slide.</h1>
-          <p className="hero-lead">A practical Quarto starter for scientists who want clear claims, reproducible figures, and layouts that hold up in the meeting room.</p>
+          <p className="eyebrow">Quarto layouts for scientific presentations</p>
+          <h1>Match each scientific claim with an appropriate slide layout.</h1>
+          <p className="hero-lead">The template provides predefined layouts, reproducible figure workflows, and rendering checks for academic presentations.</p>
           <div className="hero-actions">
-            <Link className="button button-primary" href="#patterns">Browse patterns <ArrowRight aria-hidden="true" /></Link>
+            <Link className="button button-primary" href="#layouts">Browse layouts <ArrowRight aria-hidden="true" /></Link>
             <Link className="button button-secondary" href="./demo/presentation.html"><Play aria-hidden="true" /> Open sampler</Link>
             <a className="text-link" href="https://github.com/DeepWaterIMR/presentation-template"><ExternalLink aria-hidden="true" /> View repository</a>
           </div>
-          <div className="hero-proof-points" aria-label="Template guarantees">
-            <span>One claim per slide</span>
-            <span>Analysis-backed figures</span>
-            <span>Visual QA built in</span>
+          <div className="hero-feature-points" aria-label="Template features">
+            <span>Full-sentence message titles</span>
+            <span>Figures generated from analysis outputs</span>
+            <span>Rendered-slide review</span>
           </div>
         </div>
-        <div className="hero-proof" aria-label="Example scientific slide preview">
+        <div className="hero-preview" aria-label="Example scientific slide preview">
           <div className="slide-preview">
-            <div className="slide-title">Trajectories should carry the argument</div>
+            <div className="slide-title">The fitted trajectories support the main interpretation.</div>
             <div className="slide-rule" />
             <div className="slide-body">
               <div className="slide-notes">
                 <span />
                 <span />
-                <span />
-                <strong>Use one takeaway beside the proof.</strong>
+                <strong>State only the interpretation needed to read the figure.</strong>
               </div>
               <svg viewBox="0 0 360 180" aria-hidden="true">
                 <path d="M24 132 C72 112 78 84 122 94 S185 44 232 67 S300 42 336 31" />
@@ -172,38 +177,42 @@ export default function LearningHub() {
 
       <section className="section choice-section" id="choose">
         <div className="section-heading">
-          <p className="eyebrow">Choose by proof object</p>
-          <h2>Start with what the audience must see.</h2>
-          <p>The layout follows the evidence. Pick the proof object first, then keep everything else subordinate.</p>
+          <p className="eyebrow">Select a layout</p>
+          <h2>Use the claim and its supporting evidence to select the composition.</h2>
+          <p>Identify the figure, image, table, or explanation that supports the slide title, then choose a layout that gives it sufficient space.</p>
         </div>
         <div className="choice-grid">
-          {proofChoices.map((choice) => (
-            <article className="choice-card" key={choice.proof}>
-              <span>{choice.proof}</span>
-              <h3>{choice.pattern}</h3>
+          {layoutChoices.map((choice) => (
+            <button className="choice-card" key={choice.id} type="button" onClick={() => {
+              const entry = entries.find((candidate) => candidate.id === choice.id);
+              if (entry) openEntry(entry);
+            }}>
+              <span>{choice.evidence}</span>
+              <h3>{choice.layout}</h3>
+              <code>{choice.code}</code>
               <p>{choice.description}</p>
-            </article>
+            </button>
           ))}
         </div>
       </section>
 
-      <section className="section catalogue-section" id="patterns">
+      <section className="section catalogue-section" id="layouts">
         <div className="catalogue-heading">
           <div className="section-heading">
-            <p className="eyebrow">Complete pattern library</p>
-            <h2>Every supported slide pattern, rendered and ready to copy.</h2>
-            <p>Browse by task, inspect the real sampler source, and open any example as a stable deep link.</p>
+            <p className="eyebrow">Slide layout catalogue</p>
+            <h2>Each layout is shown with a rendered example and its Quarto source.</h2>
+            <p>The displayed name and code refer to the same composition, so a layout can be requested unambiguously.</p>
           </div>
-          <Link className="text-link" href="./demo/presentation.html">Open all {patterns.length || 21} slides <Play aria-hidden="true" /></Link>
+          <Link className="text-link" href="./demo/presentation.html">Open all {entries.length || 21} examples <Play aria-hidden="true" /></Link>
         </div>
 
         <div className="catalogue-controls">
           <div className="search-field">
             <Search aria-hidden="true" />
-            <label className="sr-only" htmlFor="pattern-search">Search slide patterns</label>
-            <Input id="pattern-search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search patterns, proof objects, or classes" />
+            <label className="sr-only" htmlFor="layout-search">Search slide layouts</label>
+            <Input id="layout-search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search layouts, evidence types, or classes" />
           </div>
-          <div className="category-filters" aria-label="Filter by category">
+          <div className="category-filters" aria-label="Filter layouts by category">
             {categories.map((name) => (
               <Button key={name} variant={category === name ? "default" : "outline"} size="sm" onClick={() => setCategory(name)} aria-pressed={category === name}>{name}</Button>
             ))}
@@ -211,22 +220,42 @@ export default function LearningHub() {
         </div>
 
         {loadError ? <p className="state-message error-message">{loadError}</p> : null}
-        {!loadError && !patterns.length ? <p className="state-message">Loading the rendered pattern catalogue…</p> : null}
-        {patterns.length && !visiblePatterns.length ? <p className="state-message">No patterns match this search. Try another proof object or category.</p> : null}
+        {!loadError && !entries.length ? <p className="state-message">Loading the rendered layout catalogue…</p> : null}
+        {layouts.length > 0 && visibleLayouts.length === 0 ? <p className="state-message">No layouts match this search. Try another evidence type or category.</p> : null}
 
-        <div className="pattern-grid">
-          {visiblePatterns.map((pattern) => (
-            <button className="pattern-card" key={pattern.id} type="button" onClick={() => openPattern(pattern)} aria-label={`Inspect ${pattern.title}`}>
-              <span className="pattern-image">
+        <div className="layout-grid">
+          {visibleLayouts.map((layout) => (
+            <button className="layout-card" key={layout.id} type="button" onClick={() => openEntry(layout)} aria-label={`Inspect ${layout.name}`}>
+              <span className="layout-image">
                 {/* oxlint-disable-next-line next/no-img-element */}
-                <img src={`./${pattern.preview}`} alt="" loading="lazy" />
+                <img src={`./${layout.preview}`} alt="" loading="lazy" />
               </span>
-              <span className="pattern-content">
-                <span className="tag">{pattern.category}</span>
-                <span className="pattern-title">{pattern.title}</span>
-                <span className="pattern-use">{pattern.use}</span>
-                <span className="pattern-open">Inspect pattern <ArrowRight aria-hidden="true" /></span>
+              <span className="layout-content">
+                <span className="tag">{layout.category}</span>
+                <span className="layout-title">{layout.name}</span>
+                <code className="layout-code">{layout.code}</code>
+                <span className="layout-use">{layout.use}</span>
+                <span className="layout-open">Inspect layout <ArrowRight aria-hidden="true" /></span>
               </span>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      <section className="section features-section" id="features">
+        <div className="section-heading">
+          <p className="eyebrow">Features and modifiers</p>
+          <h2>Rendering features are documented separately from slide layouts.</h2>
+          <p>These examples cover fragments, emphasis, background images, custom figure fonts, and table density. They modify a layout rather than replace one.</p>
+        </div>
+        <div className="feature-grid">
+          {features.map((feature) => (
+            <button className="feature-card" key={feature.id} type="button" onClick={() => openEntry(feature)} aria-label={`Inspect ${feature.name}`}>
+              <span className="tag">{feature.category}</span>
+              <span className="feature-title">{feature.name}</span>
+              <code>{feature.code}</code>
+              <span>{feature.use}</span>
+              <span className="layout-open">Inspect feature <ArrowRight aria-hidden="true" /></span>
             </button>
           ))}
         </div>
@@ -235,8 +264,8 @@ export default function LearningHub() {
       <section className="section workflow-section" id="start">
         <div className="section-heading">
           <p className="eyebrow">Reproducible workflow</p>
-          <h2>The deck stays connected to the analysis.</h2>
-          <p>The template separates scientific computation from presentation logic while keeping every displayed result rerenderable.</p>
+          <h2>Presentation inputs can remain connected to the analysis project.</h2>
+          <p>The template separates scientific computation from presentation-specific composition while allowing displayed results to be regenerated.</p>
         </div>
         <div className="workflow-grid">
           {workflow.map((step) => (
@@ -250,16 +279,16 @@ export default function LearningHub() {
         <div className="quickstart-grid">
           <article className="quickstart-card featured">
             <p className="eyebrow">Agent-assisted</p>
-            <h3>Start with the conversation, not the slide file.</h3>
-            <p>Give the agent the template URL, analysis project, and destination folder. It will learn the project, draft the slide plan, and wait for approval before building.</p>
-            <pre><code>Use https://github.com/DeepWaterIMR/presentation-template to start a presentation in docs/presentation. Familiarize yourself with the analysis first, prepare slide-plan.md, and wait for approval before building.</code></pre>
+            <h3>Begin with the analysis context and an agreed slide plan.</h3>
+            <p>Provide the template URL, analysis project, and destination folder. The agent reviews the project, drafts the slide plan, and waits for approval before building the presentation.</p>
+            <pre><code>Use https://github.com/DeepWaterIMR/presentation-template to start a presentation in docs/presentation. Review the analysis first, prepare slide-plan.md, and wait for approval before building.</code></pre>
           </article>
           <article className="quickstart-card">
             <p className="eyebrow">Manual install</p>
-            <h3>Install the scaffold into an existing project.</h3>
+            <h3>Install the template into an existing project.</h3>
             <pre><code>{`Rscript install_into_project.R \\
   --target "/path/to/project"`}</code></pre>
-            <p>The default destination is <code>docs/presentation/</code>. Existing project-level agent guidance is never overwritten.</p>
+            <p>The default destination is <code>docs/presentation/</code>. Existing project-level agent guidance is not overwritten.</p>
           </article>
         </div>
       </section>
@@ -267,8 +296,8 @@ export default function LearningHub() {
       <section className="section skills-section" id="skills">
         <div className="section-heading">
           <p className="eyebrow">Focused agent skills</p>
-          <h2>Task workflows are skills. Stable rules stay in the repository contract.</h2>
-          <p>This keeps automatic discovery precise without loading rendering and maintenance procedures into every session.</p>
+          <h2>Task-specific procedures are separated from stable presentation rules.</h2>
+          <p>This limits automatic routing to the procedures relevant to creating, reviewing, or maintaining a presentation.</p>
         </div>
         <div className="skills-grid">
           {skills.map((skill) => (
@@ -283,8 +312,8 @@ export default function LearningHub() {
 
       <section className="section contribution-panel">
         <div>
-          <p className="eyebrow">Improve the template</p>
-          <h2>New patterns should arrive with a rendered example, catalogue entry, and validation.</h2>
+          <p className="eyebrow">Contribute</p>
+          <h2>New layouts require a source example, catalogue record, rendered preview, and validation.</h2>
         </div>
         <div className="contribution-actions">
           <a className="button button-primary" href="https://github.com/DeepWaterIMR/presentation-template/blob/main/CONTRIBUTING.md">Contribution guide <ArrowRight aria-hidden="true" /></a>
@@ -294,27 +323,27 @@ export default function LearningHub() {
 
       <footer>
         <span>DeepWaterIMR presentation template</span>
-        <span>Quarto source · Self-contained HTML · MIT licensed code</span>
+        <span>Quarto source · Self-contained HTML · MIT-licensed code</span>
       </footer>
 
-      <Dialog open={Boolean(selected)} onOpenChange={(open) => { if (!open) closePattern(); }}>
+      <Dialog open={Boolean(selected)} onOpenChange={(open) => { if (!open) closeEntry(); }}>
         {selected ? (
-          <DialogContent className="pattern-dialog">
+          <DialogContent className="layout-dialog">
             <DialogHeader>
               <div className="dialog-heading-row">
-                <span className="tag">{selected.category}</span>
-                <span className="class-list">{selected.classes.map((className) => `.${className}`).join(" · ")}</span>
+                <span className="tag">{selected.kind === "layout" ? selected.category : "Feature"}</span>
+                <code className="class-list">{selected.code}</code>
               </div>
-              <DialogTitle>{selected.title}</DialogTitle>
+              <DialogTitle>{selected.name}</DialogTitle>
               <DialogDescription>{selected.use}</DialogDescription>
             </DialogHeader>
             <div className="dialog-grid">
               <div className="dialog-preview">
                 {/* oxlint-disable-next-line next/no-img-element */}
-                <img src={`./${selected.preview}`} alt={`Rendered example of ${selected.title}`} />
+                <img src={`./${selected.preview}`} alt={`Rendered example of ${selected.name}`} />
                 <div className="dialog-facts">
-                  <div><span>Proof object</span><strong>{selected.proofObject}</strong></div>
-                  <div><span>Watch for</span><strong>{selected.caveat}</strong></div>
+                  <div><span>Evidence or explanation</span><strong>{selected.evidence}</strong></div>
+                  <div><span>Consideration</span><strong>{selected.caveat}</strong></div>
                 </div>
               </div>
               <div className="snippet-panel">
@@ -323,7 +352,7 @@ export default function LearningHub() {
                   <Button size="sm" variant="outline" onClick={copySnippet}>{copied ? <Check aria-hidden="true" /> : <Copy aria-hidden="true" />}{copied ? "Copied" : "Copy"}</Button>
                 </div>
                 <pre><code>{selected.snippet}</code></pre>
-                <span className="copy-status" aria-live="polite">{copied ? "Pattern source copied to the clipboard." : ""}</span>
+                <span className="copy-status" aria-live="polite">{copied ? `${selected.kind === "layout" ? "Layout" : "Feature"} source copied to the clipboard.` : ""}</span>
               </div>
             </div>
           </DialogContent>

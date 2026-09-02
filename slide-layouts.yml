@@ -1,0 +1,232 @@
+entries:
+  - id: title-slide
+    kind: layout
+    name: Title slide
+    category: Opening
+    evidence: Presentation title, authors, context, and date
+    use: Introduce the subject and presentation context without adding an agenda or evidence panel.
+    code: .title-slide
+    classes: [title-slide]
+    caveat: Keep the title concise and reserve detailed context for the opening remarks.
+    source_marker: title-slide
+    preview: title-slide.png
+  - id: process-flow
+    kind: layout
+    name: Process flow
+    category: Explanation
+    evidence: A short sequence or causal chain
+    use: Explain three linked stages when their order or relationship is part of the argument.
+    code: .process-flow
+    classes: [process-flow, flow-step]
+    caveat: Use only when the stages form a real sequence; avoid turning an agenda into a diagram.
+    source_marker: process-flow
+    preview: process-flow.png
+  - id: provenance-grid
+    kind: layout
+    name: Provenance grid
+    category: Explanation
+    evidence: Four related sources, stages, or responsibilities
+    use: Describe a reproducible workflow or another four-part structure with parallel elements.
+    code: .provenance-grid
+    classes: [provenance-grid, card]
+    caveat: Keep each element brief and state how the parts relate to the slide title.
+    source_marker: provenance-grid
+    preview: provenance-grid.png
+  - id: metric-grid
+    kind: layout
+    name: Metric grid
+    category: Values
+    evidence: Two or three comparable values
+    use: Present a small set of measurements that share one interpretation.
+    code: .metric-grid
+    classes: [metric-grid, metric-card]
+    caveat: Use comparable quantities and include units or reference values where needed.
+    source_marker: metric-grid
+    preview: metric-grid.png
+  - id: text-figure
+    kind: layout
+    name: Text + figure
+    category: Figures
+    evidence: One figure with brief interpretation
+    use: Keep a short interpretation beside a figure that occupies most of the slide.
+    code: .text-figure
+    classes: [text-figure, text-panel, figure-panel]
+    caveat: Limit the text to the interpretation or assumptions needed to understand the figure.
+    source_marker: text-figure
+    preview: text-figure.png
+  - id: layout-guide
+    kind: feature
+    name: Layout guide
+    category: Authoring
+    evidence: A reference for selecting layouts
+    use: Relate evidence and explanation types to the available layout classes.
+    code: .layout-guide
+    classes: [layout-guide]
+    caveat: This is an authoring reference and should normally be removed from a project presentation.
+    source_marker: layout-guide
+    preview: layout-guide.png
+  - id: diagnostic-grid
+    kind: layout
+    name: Diagnostic grid
+    category: Figures
+    evidence: A small set of related diagnostic results
+    use: Compare model checks or sensitivity results as aligned small multiples.
+    code: .diagnostic-grid
+    classes: [diagnostic-grid, diagnostic-card]
+    caveat: State what each diagnostic tests and keep axes and labels readable.
+    source_marker: diagnostic-grid
+    preview: diagnostic-grid.png
+  - id: emphasis-styles
+    kind: feature
+    name: Emphasis styles
+    category: Authoring
+    evidence: A limitation, interpretation, or deadline
+    use: Apply restrained visual emphasis to text that has a distinct function.
+    code: .alert-box / .takeaway / .deadline
+    classes: [alert-box, takeaway, deadline, closing]
+    caveat: Emphasis loses meaning when it is applied to most of the slide.
+    source_marker: emphasis-styles
+    preview: emphasis-styles.png
+  - id: edge-figure
+    kind: layout
+    name: Edge figure
+    category: Figures
+    evidence: A tall or square figure with short accompanying text
+    use: Extend one figure to the slide edge while retaining a narrow interpretation column.
+    code: .edge-figure
+    classes: [edge-figure, edge-figure-text, edge-figure-panel]
+    caveat: Recheck the crop and title width whenever the slide ratio or centering changes.
+    source_marker: edge-figure
+    preview: edge-figure.png
+  - id: figure-swap
+    kind: feature
+    name: Figure swap
+    category: Authoring
+    evidence: Two variants shown in the same position
+    use: Replace one figure with another while keeping the comparison frame fixed.
+    code: .figure-swap
+    classes: [figure-swap, r-stack, fragment, fade-out, fade-in]
+    caveat: Use matching fragment indices and make the first figure fade out completely.
+    source_marker: figure-swap
+    preview: figure-swap.png
+  - id: figure-walkthrough
+    kind: layout
+    name: Figure walkthrough
+    category: Sequence
+    evidence: A sequence of figures with synchronized interpretation
+    use: Advance through several views of the same analysis without changing the slide composition.
+    code: .figure-walkthrough
+    classes: [figure-walkthrough, columns, r-stack, fragment, fade-in-then-out]
+    caveat: Each intermediate transparent figure must fade out before the next appears.
+    source_marker: figure-walkthrough
+    preview: figure-walkthrough.png
+  - id: concept-image
+    kind: layout
+    name: Concept + image
+    category: Explanation
+    evidence: A concept supported by a photograph, schematic, map, or representative figure
+    use: Explain an unfamiliar concept while giving the visual most of the slide area.
+    code: .concept-image
+    classes: [concept-image, concept-text, concept-visual]
+    caveat: Use a visual that explains the mechanism or context rather than a decorative image.
+    source_marker: concept-image
+    preview: concept-image.png
+  - id: table-figure
+    kind: layout
+    name: Table + figure
+    category: Values
+    evidence: Exact values with a compact graphical check
+    use: Pair a focused table with a small figure when both exact values and shape matter.
+    code: .table-figure
+    classes: [table-figure, scenario-figure]
+    caveat: Keep the table narrow enough for presentation-size text and omit nonessential columns.
+    source_marker: table-figure
+    preview: table-figure.png
+  - id: wide-figure
+    kind: layout
+    name: Wide figure
+    category: Figures
+    evidence: A figure that needs nearly the full slide width
+    use: Give a dense chart, uncertainty display, or faceted result more horizontal space.
+    code: .wide-figure
+    classes: [wide-figure, text-panel, figure-panel]
+    caveat: Remove supporting text before reducing labels or legends below the presentation minimum.
+    source_marker: wide-figure
+    preview: wide-figure.png
+  - id: map-context
+    kind: layout
+    name: Map + context
+    category: Figures
+    evidence: A map with a short geographic interpretation
+    use: Show spatial coverage or distribution while retaining only the context needed to interpret it.
+    code: .map-context
+    classes: [map-context, text-panel, figure-panel]
+    caveat: Keep the mapped area dominant and use legible station symbols, labels, and legends.
+    source_marker: map-context
+    preview: map-context.png
+  - id: full-figure
+    kind: layout
+    name: Full-width figure
+    category: Figures
+    evidence: One figure whose overall shape carries the claim
+    use: Place a figure across the content area with only a short annotation or source note.
+    code: .full-figure
+    classes: [full-figure]
+    caveat: Use callouts sparingly and avoid covering data or uncertainty intervals.
+    source_marker: full-figure
+    preview: full-figure.png
+  - id: background-image
+    kind: feature
+    name: Background image
+    category: Authoring
+    evidence: A contextual image behind a short message
+    use: Use a Reveal background image when a contextual visual should span the entire canvas.
+    code: background-image
+    classes: [background-image]
+    caveat: Ensure sufficient contrast and do not use a decorative background behind data-dense content.
+    source_marker: background-image
+    preview: background-image.png
+  - id: custom-figure-font
+    kind: feature
+    name: Custom figure font
+    category: Authoring
+    evidence: A reproducible annotation within a generated figure
+    use: Register a bundled font for occasional annotations that must render consistently across systems.
+    code: register_xkcd_font()
+    classes: [custom-figure-font]
+    caveat: Render with ragg because the default Quartz PNG device does not use registered systemfonts fonts.
+    source_marker: custom-figure-font
+    preview: custom-figure-font.png
+  - id: table-density
+    kind: feature
+    name: Table density
+    category: Authoring
+    evidence: A table with more columns than the default layout supports
+    use: Select the medium or tight table modifier before considering smaller text.
+    code: .table-medium / .table-tight
+    classes: [table-medium, table-tight]
+    caveat: Move detail to an appendix if the tight modifier still produces unreadable text.
+    source_marker: table-density
+    preview: table-density.png
+  - id: scenario-table
+    kind: layout
+    name: Scenario table
+    category: Values
+    evidence: Exact comparison among a small number of scenarios
+    use: Compare management, model, or sensitivity scenarios in a full-width table.
+    code: .scenario-table
+    classes: [scenario-table, table-medium]
+    caveat: Retain only the columns needed for the comparison described by the title.
+    source_marker: scenario-table
+    preview: scenario-table.png
+  - id: conclusion-figure
+    kind: layout
+    name: Conclusion + figure
+    category: Closing
+    evidence: The main conclusion with one supporting figure or image
+    use: Restate the principal conclusion and its implication beside the most relevant visual.
+    code: .conclusion-figure
+    classes: [conclusion-figure, conclusion-text, conclusion-visual]
+    caveat: Do not replace the conclusion with a generic thank-you slide or a list of unrelated takeaways.
+    source_marker: conclusion-figure
+    preview: conclusion-figure.png

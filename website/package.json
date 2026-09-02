@@ -6,7 +6,7 @@
     "node": ">=22.13.0"
   },
   "scripts": {
-    "catalog": "Rscript ../scripts/generate_pattern_catalog.R",
+    "catalog": "Rscript ../scripts/generate_layout_catalog.R",
     "predev": "npm run catalog",
     "dev": "vinext dev",
     "prebuild": "npm run catalog",

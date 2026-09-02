@@ -1,19 +1,20 @@
 # Contributing
 
-Contributions should improve a real presentation task while keeping downstream decks reproducible and easy to review. Open an issue before a large visual-system, installer, or interface change.
+Contributions should address a real scientific presentation task while keeping downstream presentations reproducible and reviewable. Open an issue before a substantial visual-system, installer, or interface change.
 
-## Add or change a slide pattern
+## Add or change a slide layout
 
-1. Give the pattern one claim and one dominant proof object.
-2. Add or update the marked example in `presentation.qmd`.
-3. Reuse or update `assets/theme.scss`; avoid one-off styling when an existing class can express the layout.
-4. Add or update the matching `slide-patterns.yml` record without changing an existing stable ID.
-5. Run `Rscript scripts/generate_pattern_catalog.R`.
-6. Render the sampler and capture previews with manifest validation.
-7. Build the learning hub and inspect desktop and mobile layouts.
-8. Update documentation when public behavior or installation changes.
+1. Give the content slide a declarative sentence title that states its main message.
+2. Identify the primary figure, image, table, or explanation and give it sufficient space.
+3. Add or update the marked example in `presentation.qmd`.
+4. Reuse or update `assets/theme.scss`; avoid one-off styling when an existing class can express the composition.
+5. Add or update the matching `slide-layouts.yml` record without changing an existing stable ID.
+6. Run `Rscript scripts/generate_layout_catalog.R`.
+7. Render the sampler and capture previews with manifest validation.
+8. Build the learning hub and inspect desktop and mobile layouts.
+9. Update documentation when public behavior or installation changes.
 
-New patterns must include concise speaker notes, readable labels, a copyable source example, a rendered preview, and a clear caveat. Utilities such as spacing or text-size modifiers should normally remain part of an existing pattern rather than becoming catalogue entries.
+New layouts must include concise speaker notes, readable labels, a copyable source example, a rendered preview, and a clear consideration or limitation. Fragments, emphasis styles, backgrounds, fonts, spacing, and text-density modifiers normally belong under features rather than becoming layouts.
 
 ## Validate a change
 
@@ -23,4 +24,4 @@ Do not commit generated HTML, QA screenshots, contact sheets, local absolute pat
 
 ## Report problems
 
-Use the issue templates and include the smallest reproducible example. For visual problems, name the slide pattern, canvas size, output format, and whether the problem appears in the source deck, rendered HTML, PDF, or screenshot capture.
+Use the issue templates and include the smallest reproducible example. For visual problems, name the slide layout, canvas size, output format, and whether the problem appears in the source presentation, rendered HTML, PDF, or screenshot capture.
