@@ -47,6 +47,7 @@ params:
 # Optional sampler dependencies, named once for both installation and loading.
 packages <- c(
   ggplot2 = NA,
+  tibble = NA,
   ggOceanMaps = NA,
   ragg = NA,
   systemfonts = NA
